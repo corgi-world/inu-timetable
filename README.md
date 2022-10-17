@@ -8,6 +8,8 @@
 
 ## 작업중
 
-- [x] eslint, prettier 세팅
+- [x] eslint, prettier 설정
 
-- [x] jest, rtl 세팅 및 github actions로 CI 구성
+- [x] jest, rtl 설정 및 github actions로 CI 구성
+
+- [x] styled-components 설정
