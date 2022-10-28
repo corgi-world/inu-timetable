@@ -2,7 +2,8 @@ export interface typeSize {
   mobile: string;
 }
 export interface typeColor {
-  textColor: string;
+  text: string;
+  background: string;
 }
 
 import 'styled-components';
