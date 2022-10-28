@@ -5,7 +5,8 @@ const size: typeSize = {
 };
 
 const color: typeColor = {
-  textColor: 'black',
+  text: 'black',
+  background: '#fafafa',
 };
 
 import { DefaultTheme } from 'styled-components';
