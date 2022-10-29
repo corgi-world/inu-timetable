@@ -1,30 +1,42 @@
 import type { NextPage } from 'next';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
 import Link from 'next/link';
 
 const signin: NextPage = () => {
+  const [id, setID] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(e);
+  };
+
+  const isAvailable = !!(id && password);
+
   return (
     <Wrapper>
       <Main>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <StyledTextField
             size='small'
             autoComplete='off'
-            placeholder={'ID'}
-            error={false}
-            helperText={''}
+            placeholder={'아이디'}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setID(e.target.value);
+            }}
           />
           <StyledTextField
             size='small'
+            autoComplete='off'
+            placeholder={'비밀번호'}
             type={'password'}
-            autoComplete='off'
-            placeholder={'Password'}
-            error={false}
-            helperText={''}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setPassword(e.target.value);
+            }}
           />
-          <SigninButton isValidated={false} disabled={true}>
+          <SigninButton isAvailable={isAvailable} disabled={!isAvailable}>
             로그인
           </SigninButton>
         </Form>
@@ -54,7 +66,6 @@ const Main = styled.main`
   justify-content: center;
   flex-direction: column;
   width: 350px;
-  height: 350px;
   padding: 30px;
   border: 1px solid #d6d6d6;
 `;
@@ -71,7 +82,7 @@ const StyledTextField = styled(TextField)`
   width: 100%;
 `;
 
-const SigninButton = styled.button<{ isValidated: boolean }>`
+const SigninButton = styled.button<{ isAvailable: boolean }>`
   width: 100%;
   height: 38px;
   padding: 10px;
@@ -80,9 +91,9 @@ const SigninButton = styled.button<{ isValidated: boolean }>`
   border-radius: 5px;
   margin-top: 10px;
   color: white;
-  background-color: ${(props) => (props.isValidated ? '#0094f6' : '#b2defc')};
+  background-color: ${(props) => (props.isAvailable ? '#0094f6' : '#b2defc')};
   text-align: center;
-  cursor: ${(props) => (props.isValidated ? 'pointer' : 'default')};
+  cursor: ${(props) => (props.isAvailable ? 'pointer' : 'default')};
 `;
 
 const SignupWrapper = styled.div`
