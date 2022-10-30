@@ -8,9 +8,18 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider, EmotionCache } from '@emotion/react';
 import createEmotionCache from '@/styles/createEmotionCache';
 
+import { useState } from 'react';
+import {
+  DehydratedState,
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 const clientSideEmotionCache = createEmotionCache();
 
-interface MyAppProps extends AppProps {
+interface MyAppProps extends AppProps<{ dehydratedState: DehydratedState }> {
   emotionCache?: EmotionCache;
 }
 
@@ -19,6 +28,7 @@ function MyApp({
   pageProps,
   emotionCache = clientSideEmotionCache,
 }: MyAppProps) {
+  const [queryClient] = useState(() => new QueryClient());
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -27,7 +37,12 @@ function MyApp({
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <CssBaseline />
-        <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <Hydrate state={pageProps.dehydratedState}>
+            <Component {...pageProps} />
+          </Hydrate>
+        </QueryClientProvider>
       </ThemeProvider>
     </CacheProvider>
   );
