@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
@@ -9,6 +10,8 @@ import {
   PASSWORD_VALIDATION,
 } from '@/utils/validation';
 import { useForm, SubmitHandler, UseFormGetValues } from 'react-hook-form';
+import { useSignup } from '@/queries/auth/query';
+import { useAlert, CommonAlert } from '@/components/CommonAlert';
 
 interface ISignupData {
   [key: string]: string;
@@ -33,6 +36,12 @@ const signup: NextPage = () => {
   const INPUTS = getInputs(getValues);
 
   const [isAvailable, setIsAvailable] = useState(false);
+  const { alertState, openAlert, closeAlert } = useAlert();
+
+  const { mutateAsync } = useSignup();
+
+  const router = useRouter();
+
   useEffect(() => {
     const subscription = watch((formData) => {
       const isEmptyValue =
@@ -43,8 +52,28 @@ const signup: NextPage = () => {
     return () => subscription.unsubscribe();
   }, [watch]);
 
-  const handleValid: SubmitHandler<ISignupFormData> = (formData) => {
-    console.log(formData);
+  const handleValid: SubmitHandler<ISignupFormData> = async ({
+    id,
+    nickname,
+    password,
+  }) => {
+    setIsAvailable(false);
+
+    const user = {
+      id,
+      nickname,
+      password,
+    };
+    const {
+      data: { ok, message },
+    } = await mutateAsync(user);
+
+    if (ok) {
+      router.push({ pathname: '/signin', query: { isSignup: true, message } });
+    } else {
+      const isError = !ok;
+      openAlert(isError, message);
+    }
   };
 
   return (
@@ -79,6 +108,14 @@ const signup: NextPage = () => {
           </Link>
         </SignupWrapper>
       </Main>
+      <CommonAlert
+        isOpen={alertState.isOpen}
+        isError={alertState.isError}
+        message={alertState.message ?? ''}
+        handleClose={() => {
+          closeAlert(() => setIsAvailable(true));
+        }}
+      />
     </Wrapper>
   );
 };

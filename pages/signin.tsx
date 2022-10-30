@@ -1,8 +1,10 @@
 import type { NextPage } from 'next';
-import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
 import Link from 'next/link';
+import { useAlert, CommonAlert } from '@/components/CommonAlert';
 
 const signin: NextPage = () => {
   const [id, setID] = useState('');
@@ -14,6 +16,18 @@ const signin: NextPage = () => {
   };
 
   const isAvailable = !!(id && password);
+
+  const { alertState, openAlert, closeAlert } = useAlert();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const { isSignup, message } = router.query;
+    if (isSignup) {
+      const isError = false;
+      openAlert(isError, message as string);
+    }
+  }, []);
 
   return (
     <Wrapper>
@@ -47,6 +61,12 @@ const signin: NextPage = () => {
           </Link>
         </SignupWrapper>
       </Main>
+      <CommonAlert
+        isOpen={alertState.isOpen}
+        isError={alertState.isError}
+        message={alertState.message}
+        handleClose={() => closeAlert()}
+      />
     </Wrapper>
   );
 };
