@@ -3,6 +3,8 @@ import { ThemeProvider } from 'styled-components';
 import Signin from '@/pages/signin';
 import theme from '@/styles/theme';
 
+jest.mock('next/router', () => require('next-router-mock'));
+
 describe('Signin', () => {
   it('Signin UI Test', () => {
     render(
