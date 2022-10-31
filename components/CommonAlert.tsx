@@ -26,7 +26,6 @@ export function useAlert() {
     });
 
     if (action) {
-      console.log(action);
       action();
     }
   };
