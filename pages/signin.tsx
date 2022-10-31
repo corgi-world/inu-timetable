@@ -5,18 +5,13 @@ import styled from 'styled-components';
 import TextField from '@mui/material/TextField';
 import Link from 'next/link';
 import { useAlert, CommonAlert } from '@/components/CommonAlert';
+import { signIn } from 'next-auth/react';
 
 const signin: NextPage = () => {
   const [id, setID] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(e);
-  };
-
-  const isAvailable = !!(id && password);
-
+  const [isAvailable, setIsAvailable] = useState(false);
   const { alertState, openAlert, closeAlert } = useAlert();
 
   const router = useRouter();
@@ -28,6 +23,35 @@ const signin: NextPage = () => {
       openAlert(isError, message as string);
     }
   }, []);
+
+  useEffect(() => {
+    setIsAvailable(id !== '' && password !== '');
+  }, [id, password]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setIsAvailable(false);
+
+    const result = await signIn('credentials', {
+      id,
+      password,
+      redirect: false,
+    });
+
+    if (result) {
+      const { ok, error } = result;
+      if (ok) {
+        console.log('ok');
+        return;
+      }
+      if (error) {
+        const isError = true;
+        openAlert(isError, error);
+        return;
+      }
+    }
+  };
 
   return (
     <Wrapper>
@@ -65,7 +89,13 @@ const signin: NextPage = () => {
         isOpen={alertState.isOpen}
         isError={alertState.isError}
         message={alertState.message}
-        handleClose={() => closeAlert()}
+        handleClose={() => {
+          closeAlert(() => {
+            if (id !== '' && password !== '') {
+              setIsAvailable(true);
+            }
+          });
+        }}
       />
     </Wrapper>
   );
