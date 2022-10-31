@@ -17,9 +17,13 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+import { SessionProvider } from 'next-auth/react';
+import { Session } from 'next-auth';
+
 const clientSideEmotionCache = createEmotionCache();
 
-interface MyAppProps extends AppProps<{ dehydratedState: DehydratedState }> {
+interface MyAppProps
+  extends AppProps<{ dehydratedState: DehydratedState; session: Session }> {
   emotionCache?: EmotionCache;
 }
 
@@ -40,7 +44,9 @@ function MyApp({
         <QueryClientProvider client={queryClient}>
           <ReactQueryDevtools initialIsOpen={false} />
           <Hydrate state={pageProps.dehydratedState}>
-            <Component {...pageProps} />
+            <SessionProvider session={pageProps.session}>
+              <Component {...pageProps} />
+            </SessionProvider>
           </Hydrate>
         </QueryClientProvider>
       </ThemeProvider>
