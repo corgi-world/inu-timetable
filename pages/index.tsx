@@ -1,7 +1,10 @@
-import type { NextPage } from 'next';
+import React from 'react';
 
-const Home: NextPage = () => {
-  return <div>Hello World</div>;
+export default function Home() {
+  return <div>index</div>;
+}
+
+import Layout from '@/components/Layout';
+Home.getLayout = function getLayout(page: JSX.Element) {
+  return <Layout>{page}</Layout>;
 };
-
-export default Home;
