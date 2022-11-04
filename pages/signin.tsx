@@ -42,7 +42,7 @@ const signin: NextPage = () => {
     if (result) {
       const { ok, error } = result;
       if (ok) {
-        console.log('ok');
+        router.push('/');
         return;
       }
       if (error) {
