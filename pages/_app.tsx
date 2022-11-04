@@ -22,8 +22,15 @@ import { Session } from 'next-auth';
 
 const clientSideEmotionCache = createEmotionCache();
 
+import type { NextComponentType, NextPageContext } from 'next';
+
+type NextPageWithLayout = NextComponentType<NextPageContext, any, any> & {
+  getLayout?: (page: JSX.Element) => JSX.Element;
+};
+
 interface MyAppProps
   extends AppProps<{ dehydratedState: DehydratedState; session: Session }> {
+  Component: NextPageWithLayout;
   emotionCache?: EmotionCache;
 }
 
@@ -33,6 +40,8 @@ function MyApp({
   emotionCache = clientSideEmotionCache,
 }: MyAppProps) {
   const [queryClient] = useState(() => new QueryClient());
+
+  const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <CacheProvider value={emotionCache}>
       <Head>
@@ -45,7 +54,7 @@ function MyApp({
           <ReactQueryDevtools initialIsOpen={false} />
           <Hydrate state={pageProps.dehydratedState}>
             <SessionProvider session={pageProps.session}>
-              <Component {...pageProps} />
+              {getLayout(<Component {...pageProps} />)}
             </SessionProvider>
           </Hydrate>
         </QueryClientProvider>
