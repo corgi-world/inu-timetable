@@ -16,6 +16,13 @@ const GlobalStyles = createGlobalStyle`
     -ms-overflow-style: none;
     scrollbar-width: none;
  }
+ a {
+   color: black;
+ }
+ button {
+   background-color: transparent;
+  cursor: pointer;
+ }
 `;
 
 export default GlobalStyles;
