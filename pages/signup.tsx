@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -69,7 +69,7 @@ const signup: NextPage = () => {
     } = await mutateAsync(user);
 
     if (ok) {
-      router.push({ pathname: '/signin', query: { isSignup: true, message } });
+      router.push({ pathname: '/signin', query: { message, isError: false } });
     } else {
       const isError = !ok;
       openAlert(isError, message);
@@ -232,3 +232,10 @@ const SignupLink = styled.p`
   font-weight: 600;
   cursor: pointer;
 `;
+
+import { redirectAuthUser } from '@/utils/auth';
+
+export async function getServerSideProps(context: NextPageContext) {
+  const returnObject = await redirectAuthUser(context.req);
+  return returnObject;
+}

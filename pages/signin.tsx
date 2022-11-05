@@ -1,4 +1,4 @@
-import type { NextPage } from 'next';
+import type { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -17,10 +17,9 @@ const signin: NextPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const { isSignup, message } = router.query;
-    if (isSignup) {
-      const isError = false;
-      openAlert(isError, message as string);
+    const { message, isError } = router.query;
+    if (message && isError) {
+      openAlert(JSON.parse(isError as string), message as string);
     }
   }, []);
 
@@ -158,3 +157,10 @@ const SignupLink = styled.p`
   font-weight: 600;
   cursor: pointer;
 `;
+
+import { redirectAuthUser } from '@/utils/auth';
+
+export async function getServerSideProps(context: NextPageContext) {
+  const returnObject = await redirectAuthUser(context.req);
+  return returnObject;
+}
