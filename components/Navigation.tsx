@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
-
+import { useRouter } from 'next/router';
+import { signOut } from 'next-auth/react';
 import {
   MdHome,
   MdBarChart,
@@ -10,8 +11,11 @@ import {
 } from 'react-icons/md';
 
 export default function Navigation() {
-  const handleSignout = () => {
-    //
+  const router = useRouter();
+
+  const handleSignout = async () => {
+    await signOut({ redirect: false });
+    router.push('/signin');
   };
 
   return (
