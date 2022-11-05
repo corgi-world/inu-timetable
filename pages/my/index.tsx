@@ -44,7 +44,7 @@ export default function Mypage({ semesters }: IMypage) {
 const Wrapper = styled.div`
   width: 100%;
   background-color: ${({ theme: { color } }) => color.background};
-  padding: 20px;
+  padding: 10px;
   display: flex;
   justify-content: center;
 `;
@@ -77,9 +77,7 @@ Mypage.getLayout = function getLayout(page: JSX.Element) {
 
 import { redirectNotAuthUser } from '@/utils/auth';
 import { NextPageContext } from 'next';
-
-import fs from 'fs';
-import path from 'path';
+import { read } from '@/utils/json';
 
 export async function getServerSideProps(context: NextPageContext) {
   const redirectObject = await redirectNotAuthUser(context.req);
@@ -87,9 +85,7 @@ export async function getServerSideProps(context: NextPageContext) {
     return redirectObject;
   }
 
-  const folderPath = path.join(process.cwd(), '/public/json');
-  const fileData = fs.readFileSync(`${folderPath}/semesters.json`, 'utf-8');
-  const semesters = JSON.parse(fileData) as string[];
+  const semesters = await read<string[]>('semesters');
 
   return { props: { semesters } };
 }
