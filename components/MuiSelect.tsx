@@ -22,20 +22,18 @@ export default function MuiSelect({ items, value, onChange }: IMuiSelect) {
     onChange(value);
   };
 
+  const sx = { fontSize: '15px', fontFamily: 'Nanum Gothic' };
+
   return (
     <Select
-      sx={{ fontSize: '13px', fontFamily: 'Nanum Gothic' }}
+      sx={sx}
       size='small'
       value={value}
       onChange={handleSelectChange}
       MenuProps={MenuProps}
     >
       {items.map((item: string) => (
-        <MenuItem
-          key={item}
-          value={item}
-          sx={{ fontSize: '13px', fontFamily: 'Nanum Gothic' }}
-        >
+        <MenuItem key={item} value={item} sx={sx}>
           {item}
         </MenuItem>
       ))}

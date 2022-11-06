@@ -25,7 +25,7 @@ export function useAlert() {
       return { isOpen: false, isError: prev.isError, message: prev.message };
     });
 
-    if (action) {
+    if (action instanceof Function) {
       action();
     }
   };
@@ -37,11 +37,7 @@ export function CommonAlert({ isOpen, isError, message, handleClose }: IAlert) {
   return (
     <Wrapper>
       <Collapse in={isOpen}>
-        <Alert
-          variant='outlined'
-          severity={isError ? 'error' : 'success'}
-          onClose={handleClose}
-        >
+        <Alert severity={isError ? 'error' : 'success'} onClose={handleClose}>
           {message}
         </Alert>
       </Collapse>
@@ -50,8 +46,10 @@ export function CommonAlert({ isOpen, isError, message, handleClose }: IAlert) {
 }
 
 const Wrapper = styled.div`
-  width: 100%;
-  padding: 10px;
   position: absolute;
-  bottom: 0px;
+  bottom: 10px;
+  width: 100%;
+  @media (min-width: ${({ theme: { size } }) => size.mobile}) {
+    width: 380px;
+  }
 `;
