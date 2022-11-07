@@ -31,65 +31,65 @@ const initializedIndex = -1;
 
 export default function Add({ timetables }: IAdd) {
   const [selectedIndex, setSelectedIndex] = useState(initializedIndex);
-  const [addedSubjects, setAddedSubjects] = useState<ITimetable[]>([]);
+  const [addedTimetables, setAddedTimetables] = useState<ITimetable[]>([]);
 
   const { alertState, openAlert, closeAlert } = useAlert();
   const { dialogState, openDialog, closeDialog } = useDialog();
 
   const { data: majorMap } = useMajorMap();
 
-  const handleSelectSubject = (
+  const handleSelectTimetable = (
     index: number,
     filteredTimetables: ITimetable[],
   ) => {
     if (!filteredTimetables) return;
 
     if (selectedIndex === index) {
-      clearSelectedSubject();
+      clearSelectedTimetable();
       return;
     }
 
     setSelectedIndex(index);
 
-    const selectedSubject = { ...filteredTimetables[index] };
-    addTempSubject(selectedSubject, addedSubjects, setAddedSubjects);
+    const selectedTimetable = { ...filteredTimetables[index] };
+    addTempTimetable(selectedTimetable, addedTimetables, setAddedTimetables);
 
-    scrollSelectedSubject(selectedSubject, viewerScrollRef);
+    scrollSelectedTimetable(selectedTimetable, viewerScrollRef);
 
     closeAlert();
   };
 
-  const handleAddSubject = () => {
-    const checkResult = check(addedSubjects);
+  const handleAddTimetable = () => {
+    const checkResult = check(addedTimetables);
     if (checkResult) {
       const message = checkResult;
       openAlert(true, message);
       return;
     }
 
-    setAddedSubjectColorIndex(addedSubjects);
+    setAddedTimetableColorIndex(addedTimetables);
 
     setSelectedIndex(initializedIndex);
   };
 
-  const handleDeleteSubject = (targetClassNumber: string) => {
+  const handleDeleteTimetable = (targetClassNumber: string) => {
     setSelectedIndex(initializedIndex);
-    const subjects = removeTempSubject(addedSubjects);
+    const Timetables = removeTempTimetable(addedTimetables);
 
-    const deleted = subjects.filter(
+    const deleted = Timetables.filter(
       ({ classNumber }) => classNumber !== targetClassNumber,
     );
-    setAddedSubjects([...deleted]);
+    setAddedTimetables([...deleted]);
   };
 
-  const handleSaveAddedSubjects = () => {
-    const subjects = addedSubjects.filter(
+  const handleSaveAddedTimetables = () => {
+    const Timetables = addedTimetables.filter(
       ({ colorIndex }) => colorIndex !== TEMP_COLOR_INDEX,
     );
 
-    clearSelectedSubject();
+    clearSelectedTimetable();
 
-    if (subjects.length === 0) {
+    if (Timetables.length === 0) {
       openAlert(true, '시간표를 추가해주세요.');
       return;
     }
@@ -101,9 +101,9 @@ export default function Add({ timetables }: IAdd) {
     openDialog();
   };
 
-  const clearSelectedSubject = useCallback(() => {
+  const clearSelectedTimetable = useCallback(() => {
     setSelectedIndex(initializedIndex);
-    setAddedSubjects((prev) => [...removeTempSubject(prev)]);
+    setAddedTimetables((prev) => [...removeTempTimetable(prev)]);
 
     closeAlert();
   }, []);
@@ -116,21 +116,21 @@ export default function Add({ timetables }: IAdd) {
         <Selector
           timetables={timetables}
           selectedIndex={selectedIndex}
-          handleSelectSubject={handleSelectSubject}
-          handleAddSubject={handleAddSubject}
-          clearSelectedSubject={clearSelectedSubject}
+          handleSelectTimetable={handleSelectTimetable}
+          handleAddTimetable={handleAddTimetable}
+          clearSelectedTimetable={clearSelectedTimetable}
         />
         <ViewerScrollBox ref={viewerScrollRef}>
           <Viewer
-            subjects={addedSubjects}
-            handleDeleteSubject={handleDeleteSubject}
+            timetables={addedTimetables}
+            handleDeleteTimetable={handleDeleteTimetable}
           />
         </ViewerScrollBox>
         <ButtonWrapper>
           <StyledButton variant='outlined' color='error'>
             취소
           </StyledButton>
-          <StyledButton variant='outlined' onClick={handleSaveAddedSubjects}>
+          <StyledButton variant='outlined' onClick={handleSaveAddedTimetables}>
             저장
           </StyledButton>
         </ButtonWrapper>
@@ -150,19 +150,19 @@ export default function Add({ timetables }: IAdd) {
   );
 }
 
-function addTempSubject(
-  selectedSubject: ITimetable,
-  addedSubjects: ITimetable[],
-  setAddedSubjects: Dispatch<SetStateAction<ITimetable[]>>,
+function addTempTimetable(
+  selectedTimetable: ITimetable,
+  addedTimetables: ITimetable[],
+  setAddedTimetables: Dispatch<SetStateAction<ITimetable[]>>,
 ) {
-  selectedSubject.colorIndex = TEMP_COLOR_INDEX;
+  selectedTimetable.colorIndex = TEMP_COLOR_INDEX;
 
-  const copiedArr = removeTempSubject(addedSubjects);
-  setAddedSubjects([...copiedArr, selectedSubject]);
+  const copiedArr = removeTempTimetable(addedTimetables);
+  setAddedTimetables([...copiedArr, selectedTimetable]);
 }
 
-function removeTempSubject(addedSubjects: ITimetable[]) {
-  const copiedArr = [...addedSubjects];
+function removeTempTimetable(addedTimetables: ITimetable[]) {
+  const copiedArr = [...addedTimetables];
   if (copiedArr[copiedArr.length - 1]?.colorIndex === TEMP_COLOR_INDEX) {
     copiedArr.pop();
   }
@@ -170,11 +170,11 @@ function removeTempSubject(addedSubjects: ITimetable[]) {
   return copiedArr;
 }
 
-function scrollSelectedSubject(
-  selectedSubject: ITimetable,
+function scrollSelectedTimetable(
+  selectedTimetable: ITimetable,
   viewerScrollRef: RefObject<HTMLDivElement>,
 ) {
-  const { isELerning, schedules } = selectedSubject;
+  const { isELerning, schedules } = selectedTimetable;
   if (!isELerning && schedules) {
     let minStartHour = 24;
     for (const schedule of schedules) {
@@ -196,39 +196,39 @@ function scrollSelectedSubject(
   }
 }
 
-function check(addedSubjects: ITimetable[]) {
-  const length = addedSubjects.length;
+function check(addedTimetables: ITimetable[]) {
+  const length = addedTimetables.length;
   if (length < 2) return false;
 
-  if (checkMaximumGrades(addedSubjects)) {
+  if (checkMaximumGrades(addedTimetables)) {
     return `최대 ${MAXIMUM_GRADES} 학점까지 추가할 수 있습니다.`;
   }
-  if (checkOverlapName(addedSubjects)) {
+  if (checkOverlapName(addedTimetables)) {
     return '동일한 수업이 이미 등록되어 있습니다.';
   }
-  if (checkOverlapSchedule(addedSubjects)) {
+  if (checkOverlapSchedule(addedTimetables)) {
     return '해당 시간에 이미 등록된 수업이 있습니다.';
   }
 
   return false;
 }
 
-function checkMaximumGrades(addedSubjects: ITimetable[]) {
-  const totalGrades = addedSubjects.reduce((prev, { grades }) => {
+function checkMaximumGrades(addedTimetables: ITimetable[]) {
+  const totalGrades = addedTimetables.reduce((prev, { grades }) => {
     return prev + grades;
   }, 0);
 
   return MAXIMUM_GRADES <= totalGrades;
 }
 
-function checkOverlapName(addedSubjects: ITimetable[]) {
-  const length = addedSubjects.length;
-  const selectedSubject = addedSubjects[length - 1];
+function checkOverlapName(addedTimetables: ITimetable[]) {
+  const length = addedTimetables.length;
+  const selectedTimetable = addedTimetables[length - 1];
 
-  for (const subject of addedSubjects) {
-    if (subject === selectedSubject) break;
+  for (const Timetable of addedTimetables) {
+    if (Timetable === selectedTimetable) break;
 
-    if (subject.name === selectedSubject.name) {
+    if (Timetable.name === selectedTimetable.name) {
       return true;
     }
   }
@@ -236,18 +236,18 @@ function checkOverlapName(addedSubjects: ITimetable[]) {
   return false;
 }
 
-function checkOverlapSchedule(addedSubjects: ITimetable[]) {
-  const length = addedSubjects.length;
-  const selectedSubject = addedSubjects[length - 1];
-  const selectedSchedules = selectedSubject.schedules;
-  if (selectedSubject.isELerning || selectedSchedules === null) return false;
+function checkOverlapSchedule(addedTimetables: ITimetable[]) {
+  const length = addedTimetables.length;
+  const selectedTimetable = addedTimetables[length - 1];
+  const selectedSchedules = selectedTimetable.schedules;
+  if (selectedTimetable.isELerning || selectedSchedules === null) return false;
 
   const addedSchedules: ISchedule[] = [];
-  for (const subject of addedSubjects) {
-    if (subject === selectedSubject) break;
+  for (const Timetable of addedTimetables) {
+    if (Timetable === selectedTimetable) break;
 
-    if (subject.schedules) {
-      addedSchedules.push(...subject.schedules);
+    if (Timetable.schedules) {
+      addedSchedules.push(...Timetable.schedules);
     }
   }
 
@@ -279,14 +279,14 @@ function checkOverlapSchedule(addedSubjects: ITimetable[]) {
   return false;
 }
 
-function setAddedSubjectColorIndex(addedSubjects: ITimetable[]) {
-  const lastIndex = addedSubjects.length - 1;
+function setAddedTimetableColorIndex(addedTimetables: ITimetable[]) {
+  const lastIndex = addedTimetables.length - 1;
   const MAX_COLOR_INDEX = COLORS.length - 1;
   const rand0to9 = Math.floor(Math.random() * 10);
   const colorIndex = lastIndex <= MAX_COLOR_INDEX ? lastIndex : rand0to9;
 
-  const lastAddedSubject = addedSubjects[lastIndex];
-  lastAddedSubject.colorIndex = colorIndex;
+  const lastAddedTimetable = addedTimetables[lastIndex];
+  lastAddedTimetable.colorIndex = colorIndex;
 }
 
 const Wrapper = styled.div`
