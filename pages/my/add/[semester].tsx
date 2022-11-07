@@ -19,6 +19,9 @@ import {
 import Viewer from '@/components/timetable/viewer';
 import Button from '@mui/material/Button';
 import { CommonAlert, useAlert } from '@/components/CommonAlert';
+import { CommonDialog, useDialog } from '@/components/CommonDialog';
+import SaveDialog from '@/components/timetable/selector/SaveDialog';
+import { useMajorMap } from '@/queries/timetable/query';
 
 interface IAdd {
   timetables: ITimetable[];
@@ -29,6 +32,11 @@ const initializedIndex = -1;
 export default function Add({ timetables }: IAdd) {
   const [selectedIndex, setSelectedIndex] = useState(initializedIndex);
   const [addedSubjects, setAddedSubjects] = useState<ITimetable[]>([]);
+
+  const { alertState, openAlert, closeAlert } = useAlert();
+  const { dialogState, openDialog, closeDialog } = useDialog();
+
+  const { data: majorMap } = useMajorMap();
 
   const handleSelectSubject = (
     index: number,
@@ -50,8 +58,6 @@ export default function Add({ timetables }: IAdd) {
 
     closeAlert();
   };
-
-  const { alertState, openAlert, closeAlert } = useAlert();
 
   const handleAddSubject = () => {
     const checkResult = check(addedSubjects);
@@ -81,9 +87,18 @@ export default function Add({ timetables }: IAdd) {
       ({ colorIndex }) => colorIndex !== TEMP_COLOR_INDEX,
     );
 
-    console.log(subjects);
-
     clearSelectedSubject();
+
+    if (subjects.length === 0) {
+      openAlert(true, '시간표를 추가해주세요.');
+      return;
+    }
+    if (!majorMap) {
+      openAlert(true, '데이터를 불러오는데 실패했습니다.');
+      return;
+    }
+
+    openDialog();
   };
 
   const clearSelectedSubject = useCallback(() => {
@@ -126,6 +141,11 @@ export default function Add({ timetables }: IAdd) {
         message={alertState.message}
         handleClose={closeAlert}
       />
+      {majorMap ? (
+        <CommonDialog isOpen={dialogState.isOpen} handleClose={closeDialog}>
+          <SaveDialog majorMap={majorMap} />
+        </CommonDialog>
+      ) : null}
     </Wrapper>
   );
 }
@@ -305,16 +325,16 @@ const StyledButton = styled(Button)`
 import { GetStaticProps } from 'next';
 import { read } from '@/utils/json';
 
-export async function getStaticPaths() {
-  const semesters = await read<string[]>('semesters');
+export function getStaticPaths() {
+  const semesters = read<string[]>('semesters');
   const paths = semesters.map((semester) => ({ params: { semester } }));
 
   return { paths, fallback: false };
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = ({ params }) => {
   const semester = params?.semester as string;
-  const timetables = await read<ITimetable[]>(semester);
+  const timetables = read<ITimetable[]>(semester);
 
   return {
     props: { timetables },
