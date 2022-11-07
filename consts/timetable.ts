@@ -23,3 +23,5 @@ export const CELL_HEIGHT = 40;
 export const TEMP_COLOR_INDEX = -1;
 
 export const MAXIMUM_GRADES = 24;
+
+export const GRADES = ['1학년', '2학년', '3학년', '4학년'];

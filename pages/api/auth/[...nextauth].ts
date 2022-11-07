@@ -5,6 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import client from '@/prisma/client';
 
 const authOptions: NextAuthOptions = {
+  secret: 'mswisking',
   session: {
     strategy: 'jwt',
   },

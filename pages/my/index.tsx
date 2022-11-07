@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Select from '@/components/MuiSelect';
 import Button from '@mui/material/Button';
+import Link from 'next/link';
 
 interface IMypage {
   semesters: string[];
@@ -32,7 +33,9 @@ export default function Mypage({ semesters }: IMypage) {
             </ButtonWrapper>
           ) : (
             <ButtonWrapper>
-              <Button variant='outlined'>시간표 추가</Button>
+              <Link href={`/my/add/${semester}`}>
+                <Button variant='outlined'>시간표 추가</Button>
+              </Link>
             </ButtonWrapper>
           )}
         </OperationWrapper>
