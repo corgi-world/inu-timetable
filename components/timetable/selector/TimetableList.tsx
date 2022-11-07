@@ -18,11 +18,12 @@ export default function TimetableList({
   return (
     <>
       {filteredTimetables.map(
-        ({ classNumber, name, professor, schedules }, index) => (
+        ({ classNumber, name, professor, grades, schedules }, index) => (
           <Timetable
             key={classNumber}
             name={name}
             professor={professor}
+            grades={grades}
             schedules={parseTimeString(schedules)}
             index={index}
             isSelected={selectedIndex === index}

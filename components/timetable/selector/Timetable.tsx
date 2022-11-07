@@ -2,9 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 
-interface ITimetable {
+interface ITimetableProps {
   name: string;
   professor: string | null;
+  grades: number;
   schedules: string;
   index: number;
   isSelected: boolean;
@@ -15,19 +16,22 @@ interface ITimetable {
 export default function Timetable({
   name,
   professor,
+  grades,
   schedules,
   index,
   isSelected,
   handleSelectTimetable,
   handleAddTimetable,
-}: ITimetable) {
+}: ITimetableProps) {
   return (
     <Wrapper
       isSelected={isSelected}
       onClick={() => handleSelectTimetable(index)}
     >
       <InfoWrapper>
-        <Name>{name}</Name>
+        <Name>
+          {name} {`[${grades}학점]`}
+        </Name>
         <p>{professor ? professor : ''}</p>
         <p>{schedules}</p>
       </InfoWrapper>
