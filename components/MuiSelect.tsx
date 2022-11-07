@@ -11,10 +11,18 @@ const MenuProps = {
 interface IMuiSelect {
   items: string[];
   value: string;
+  fontSize?: string;
+  width?: string;
   onChange: (value: string) => void;
 }
 
-export default function MuiSelect({ items, value, onChange }: IMuiSelect) {
+export default function MuiSelect({
+  items,
+  value,
+  fontSize = '15px',
+  width,
+  onChange,
+}: IMuiSelect) {
   const handleSelectChange = (event: SelectChangeEvent) => {
     const {
       target: { value },
@@ -22,7 +30,7 @@ export default function MuiSelect({ items, value, onChange }: IMuiSelect) {
     onChange(value);
   };
 
-  const sx = { fontSize: '15px', fontFamily: 'Nanum Gothic' };
+  const sx = { fontSize, fontFamily: 'Nanum Gothic', width };
 
   return (
     <Select
