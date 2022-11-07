@@ -7,9 +7,15 @@ import Button from '@mui/material/Button';
 
 interface ISaveDialog {
   majorMap: TypeMajorMap;
+  handleClose: () => void;
+  handleSave: (major: string, grade: string) => void;
 }
 
-export default function SaveDialog({ majorMap }: ISaveDialog) {
+export default function SaveDialog({
+  majorMap,
+  handleClose,
+  handleSave,
+}: ISaveDialog) {
   const {
     colleges,
     college,
@@ -55,10 +61,19 @@ export default function SaveDialog({ majorMap }: ISaveDialog) {
         </SelectWrapper>
       </UserWrapper>
       <ButtonWrapper>
-        <StyledButton variant='outlined' color='error'>
+        <StyledButton
+          variant='outlined'
+          color='error'
+          onClick={() => handleClose()}
+        >
           취소
         </StyledButton>
-        <StyledButton variant='outlined'>저장</StyledButton>
+        <StyledButton
+          variant='outlined'
+          onClick={() => handleSave(major, grade)}
+        >
+          저장
+        </StyledButton>
       </ButtonWrapper>
     </Wrapper>
   );
