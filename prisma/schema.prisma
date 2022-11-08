@@ -17,8 +17,8 @@ model User {
 
 model Timetables {
   index       Int    @id @default(autoincrement())
-  id          String @unique
-  nickname    String @unique
+  id          String
+  nickname    String
   semester    String
   major       String
   grade       String
