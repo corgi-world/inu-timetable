@@ -14,3 +14,14 @@ model User {
   nickname String @unique
   password String
 }
+
+model Timetables {
+  index       Int    @id @default(autoincrement())
+  id          String @unique
+  nickname    String @unique
+  semester    String
+  major       String
+  grade       String
+  totalGrades Int
+  timetables  Json
+}
