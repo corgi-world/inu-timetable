@@ -5,24 +5,31 @@ import client from '@/prisma/client';
 type Data = {
   ok: boolean;
   message?: string;
-  userTimetables?: IUserTimetable;
+  userTimetable?: IUserTimetable;
 };
 
-interface IRequest extends NextApiRequest {
-  body: { id: string };
-}
-
 export default async function handler(
-  req: IRequest,
+  req: NextApiRequest,
   res: NextApiResponse<Data>,
 ) {
-  const { id } = req.body;
+  const { id, semester } = req.query;
+  if (!id || !semester) {
+    res
+      .status(200)
+      .json({ ok: false, message: '불러오기 실패 - query string 오류' });
+    return;
+  }
 
   try {
     const result = await client.timetables.findFirst({
       where: {
-        id: {
-          equals: id,
+        AND: {
+          id: {
+            equals: id as string,
+          },
+          semester: {
+            equals: semester as string,
+          },
         },
       },
     });
@@ -31,7 +38,7 @@ export default async function handler(
       const { id, nickname, semester, major, grade, totalGrades, timetables } =
         result;
 
-      const userTimetables = {
+      const userTimetable = {
         id,
         nickname,
         semester,
@@ -41,9 +48,11 @@ export default async function handler(
         timetables: JSON.parse(timetables as string) as ITimetable[],
       };
 
-      res.status(200).json({ ok: true, userTimetables });
+      res.status(200).json({ ok: true, userTimetable });
     } else if (!result) {
-      res.status(200).json({ ok: true });
+      res
+        .status(200)
+        .json({ ok: false, message: '불러오기 실패 - 데이터베이스 오류' });
     }
   } catch {
     res
