@@ -2,29 +2,36 @@ import React from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 
-interface ISubject {
+interface ITimetableProps {
   name: string;
   professor: string | null;
+  grades: number;
   schedules: string;
   index: number;
   isSelected: boolean;
-  handleSelectSubject: (index: number) => void;
-  handleAddSubject: () => void;
+  handleSelectTimetable: (index: number) => void;
+  handleAddTimetable: () => void;
 }
 
-export default function Subject({
+export default function Timetable({
   name,
   professor,
+  grades,
   schedules,
   index,
   isSelected,
-  handleSelectSubject,
-  handleAddSubject,
-}: ISubject) {
+  handleSelectTimetable,
+  handleAddTimetable,
+}: ITimetableProps) {
   return (
-    <Wrapper isSelected={isSelected} onClick={() => handleSelectSubject(index)}>
+    <Wrapper
+      isSelected={isSelected}
+      onClick={() => handleSelectTimetable(index)}
+    >
       <InfoWrapper>
-        <Name>{name}</Name>
+        <Name>
+          {name} {`[${grades}학점]`}
+        </Name>
         <p>{professor ? professor : ''}</p>
         <p>{schedules}</p>
       </InfoWrapper>
@@ -34,7 +41,7 @@ export default function Subject({
           size='medium'
           onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
             event.stopPropagation();
-            handleAddSubject();
+            handleAddTimetable();
           }}
         >
           추가

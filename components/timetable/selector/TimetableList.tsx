@@ -1,33 +1,34 @@
 import React from 'react';
-import Subject from './Subject';
+import Timetable from './Timetable';
 import type { ISchedule, ITimetable } from '@/types/timetable';
 
-interface ISubjectList {
+interface ITimetableList {
   filteredTimetables: ITimetable[];
   selectedIndex: number;
-  handleSelectSubject: (index: number) => void;
-  handleAddSubject: () => void;
+  handleSelectTimetable: (index: number) => void;
+  handleAddTimetable: () => void;
 }
 
-export default function SubjectList({
+export default function TimetableList({
   filteredTimetables,
   selectedIndex,
-  handleSelectSubject,
-  handleAddSubject,
-}: ISubjectList) {
+  handleSelectTimetable,
+  handleAddTimetable,
+}: ITimetableList) {
   return (
     <>
       {filteredTimetables.map(
-        ({ classNumber, name, professor, schedules }, index) => (
-          <Subject
+        ({ classNumber, name, professor, grades, schedules }, index) => (
+          <Timetable
             key={classNumber}
             name={name}
             professor={professor}
+            grades={grades}
             schedules={parseTimeString(schedules)}
             index={index}
             isSelected={selectedIndex === index}
-            handleSelectSubject={handleSelectSubject}
-            handleAddSubject={handleAddSubject}
+            handleSelectTimetable={handleSelectTimetable}
+            handleAddTimetable={handleAddTimetable}
           />
         ),
       )}

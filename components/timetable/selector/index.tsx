@@ -3,25 +3,25 @@ import styled from 'styled-components';
 import type { ITimetable } from '@/types/timetable';
 import Select from '@/components/MuiSelect';
 import TextField from '@/components/MuiTextField';
-import SubjectList from './SubjectList';
+import TimetableList from './TimetableList';
 
 interface ISelector {
   timetables: ITimetable[];
   selectedIndex: number;
-  handleSelectSubject: (
+  handleSelectTimetable: (
     index: number,
     filteredTimetables: ITimetable[],
   ) => void;
-  handleAddSubject: () => void;
-  clearSelectedSubject: () => void;
+  handleAddTimetable: () => void;
+  clearSelectedTimetable: () => void;
 }
 
 export default function Selector({
   timetables,
   selectedIndex,
-  handleSelectSubject,
-  handleAddSubject,
-  clearSelectedSubject,
+  handleSelectTimetable,
+  handleAddTimetable,
+  clearSelectedTimetable,
 }: ISelector) {
   const {
     categories,
@@ -32,13 +32,13 @@ export default function Selector({
     filteredTimetables,
   } = useTimetables(timetables);
 
-  const SubjectListScrollRef = useRef<HTMLDivElement>(null);
+  const TimetableListScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    clearSelectedSubject();
+    clearSelectedTimetable();
 
-    clearSubjectListScroll(SubjectListScrollRef);
-  }, [clearSelectedSubject, category, keyword]);
+    clearTimetableListScroll(TimetableListScrollRef);
+  }, [clearSelectedTimetable, category, keyword]);
 
   return (
     <Wrapper>
@@ -51,14 +51,14 @@ export default function Selector({
           onChange={setKeyword}
         />
       </FilterWrapper>
-      <ListWrapper ref={SubjectListScrollRef}>
-        <SubjectList
+      <ListWrapper ref={TimetableListScrollRef}>
+        <TimetableList
           filteredTimetables={filteredTimetables}
           selectedIndex={selectedIndex}
-          handleSelectSubject={(index) => {
-            handleSelectSubject(index, filteredTimetables);
+          handleSelectTimetable={(index) => {
+            handleSelectTimetable(index, filteredTimetables);
           }}
-          handleAddSubject={handleAddSubject}
+          handleAddTimetable={handleAddTimetable}
         />
       </ListWrapper>
     </Wrapper>
@@ -100,7 +100,7 @@ function filterByKeyword(keyword: string, timetables: ITimetable[]) {
   return [];
 }
 
-function clearSubjectListScroll(ref: RefObject<HTMLDivElement>) {
+function clearTimetableListScroll(ref: RefObject<HTMLDivElement>) {
   ref?.current?.scrollTo({
     left: 0,
     top: 0,

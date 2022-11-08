@@ -9,7 +9,7 @@ interface IOfflineSubject {
   height: number;
   backgroundColor: string;
   isTempSubject: boolean;
-  handleDeleteSubject?: (classNumber: string) => void;
+  handleDeleteTimetable?: (classNumber: string) => void;
 }
 
 export default function OfflineSubject({
@@ -19,7 +19,7 @@ export default function OfflineSubject({
   height,
   backgroundColor,
   isTempSubject,
-  handleDeleteSubject,
+  handleDeleteTimetable,
 }: IOfflineSubject) {
   return (
     <Wrapper
@@ -30,8 +30,8 @@ export default function OfflineSubject({
       onClick={() => {
         if (isTempSubject) return;
 
-        if (handleDeleteSubject !== undefined) {
-          handleDeleteSubject(classNumber);
+        if (handleDeleteTimetable !== undefined) {
+          handleDeleteTimetable(classNumber);
         }
       }}
     >

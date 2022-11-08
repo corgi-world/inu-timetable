@@ -5,19 +5,19 @@ import styled from 'styled-components';
 interface IOnlineSubject {
   classNumber: string;
   name: string;
-  handleDeleteSubject?: (classNumber: string) => void;
+  handleDeleteTimetable?: (classNumber: string) => void;
 }
 
 export default function OnlineSubject({
   classNumber,
   name,
-  handleDeleteSubject,
+  handleDeleteTimetable,
 }: IOnlineSubject) {
   return (
     <Wrapper
       onClick={() => {
-        if (handleDeleteSubject !== undefined) {
-          handleDeleteSubject(classNumber);
+        if (handleDeleteTimetable !== undefined) {
+          handleDeleteTimetable(classNumber);
         }
       }}
     >

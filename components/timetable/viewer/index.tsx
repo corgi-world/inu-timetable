@@ -12,12 +12,12 @@ import {
 } from '@/consts/timetable';
 
 interface IViewer {
-  subjects: ITimetable[];
-  handleDeleteSubject?: (classNumber: string) => void;
+  timetables: ITimetable[];
+  handleDeleteTimetable?: (classNumber: string) => void;
 }
 
-export default function Viewer({ subjects, handleDeleteSubject }: IViewer) {
-  const { online, offline } = filterSubjectsByIsOnline(subjects);
+export default function Viewer({ timetables, handleDeleteTimetable }: IViewer) {
+  const { online, offline } = filterTimetablesByIsOnline(timetables);
 
   return (
     <Wrapper>
@@ -26,7 +26,7 @@ export default function Viewer({ subjects, handleDeleteSubject }: IViewer) {
           key={name}
           classNumber={classNumber}
           name={name}
-          handleDeleteSubject={handleDeleteSubject}
+          handleDeleteTimetable={handleDeleteTimetable}
         />
       ))}
       <Table>
@@ -40,7 +40,7 @@ export default function Viewer({ subjects, handleDeleteSubject }: IViewer) {
                 {12 < hour ? hour - 12 : hour}
               </RowHeader>
             ) : (
-              renderOfflineSubjects(day, hour, offline, handleDeleteSubject)
+              renderOfflineSubjects(day, hour, offline, handleDeleteTimetable)
             ),
           );
         })}
@@ -49,12 +49,12 @@ export default function Viewer({ subjects, handleDeleteSubject }: IViewer) {
   );
 }
 
-function filterSubjectsByIsOnline(subjects: ITimetable[]) {
-  const onlineSubjects = subjects.filter(
+function filterTimetablesByIsOnline(timetables: ITimetable[]) {
+  const onlineSubjects = timetables.filter(
     ({ isELerning, colorIndex }) =>
       isELerning && colorIndex !== undefined && TEMP_COLOR_INDEX < colorIndex,
   );
-  const offlineSubjects = subjects.filter(({ isELerning }) => !isELerning);
+  const offlineSubjects = timetables.filter(({ isELerning }) => !isELerning);
   return { online: onlineSubjects, offline: offlineSubjects };
 }
 
@@ -62,7 +62,7 @@ function renderOfflineSubjects(
   day: string,
   hour: number,
   subjects: ITimetable[],
-  handleDeleteSubject?: (classNumber: string) => void,
+  handleDeleteTimetable?: (classNumber: string) => void,
 ) {
   const foundSubjects = findSubjectByTime(day, hour, subjects);
   if (0 < foundSubjects.length) {
@@ -87,7 +87,7 @@ function renderOfflineSubjects(
           height={height}
           backgroundColor={color}
           isTempSubject={colorIndex === TEMP_COLOR_INDEX}
-          handleDeleteSubject={handleDeleteSubject}
+          handleDeleteTimetable={handleDeleteTimetable}
         />,
       );
     }

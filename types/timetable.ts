@@ -34,3 +34,13 @@ export type TypeColleges =
 export type TypeMajorMap = {
   [key in TypeColleges]: string[];
 };
+
+export interface IUserTimetable {
+  id: string;
+  nickname: string;
+  semester: string;
+  major: string;
+  grade: string;
+  totalGrades: number;
+  timetables: ITimetable[];
+}

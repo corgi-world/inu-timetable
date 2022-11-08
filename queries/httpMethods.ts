@@ -6,8 +6,8 @@ export function get(service: AxiosInstance, queryString = '') {
     .then((response: AxiosResponse<any, any>) => response.data);
 }
 
-export function post(service: AxiosInstance, data: unknown) {
-  return service.post('', data);
+export function post<T>(service: AxiosInstance, data: unknown) {
+  return service.post<T>('', data);
 }
 
 export function put(service: AxiosInstance, queryString = '', data: unknown) {

@@ -1,11 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import client from '@/prisma/client';
-import { IUser } from '@/types/auth';
-
-type Data = {
-  ok: boolean;
-  message: string;
-};
+import type { IUser } from '@/types/auth';
+import type { IDefaultPostResponse } from '@/types/apiResponse';
 
 interface IRequest extends NextApiRequest {
   body: IUser;
@@ -13,7 +9,7 @@ interface IRequest extends NextApiRequest {
 
 export default async function handler(
   req: IRequest,
-  res: NextApiResponse<Data>,
+  res: NextApiResponse<IDefaultPostResponse>,
 ) {
   if (req.method !== 'POST') {
     res.status(405).send({ ok: false, message: 'Only POST requests allowed' });
