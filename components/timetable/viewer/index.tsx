@@ -128,6 +128,7 @@ function calcSubjectPosition(startMinute: number, workingMinutes: number) {
 const Wrapper = styled.div`
   width: 100%;
   margin: 0 auto;
+  background-color: white;
 `;
 
 const Table = styled.div`
