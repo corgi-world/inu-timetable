@@ -5,6 +5,7 @@ const GlobalStyles = createGlobalStyle`
   ${reset}
   body {
     font-family: 'Nanum Gothic', sans-serif;
+    background-color: ${({ theme: { color } }) => color.background};
   }
   * {
     box-sizing:border-box;
