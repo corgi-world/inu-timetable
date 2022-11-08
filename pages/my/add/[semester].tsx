@@ -21,22 +21,32 @@ import Button from '@mui/material/Button';
 import { CommonAlert, useAlert } from '@/components/CommonAlert';
 import { CommonDialog, useDialog } from '@/components/CommonDialog';
 import SaveDialog from '@/components/timetable/selector/SaveDialog';
-import { useMajorMap } from '@/queries/timetable/query';
+import { useSession } from 'next-auth/react';
+import { useMajorMap, useUserPostTimetables } from '@/queries/timetable/query';
+import { useRouter } from 'next/router';
 
 interface IAdd {
+  semester: string;
   timetables: ITimetable[];
 }
 
 const initializedIndex = -1;
 
-export default function Add({ timetables }: IAdd) {
+export default function Add({ semester, timetables }: IAdd) {
   const [selectedIndex, setSelectedIndex] = useState(initializedIndex);
   const [addedTimetables, setAddedTimetables] = useState<ITimetable[]>([]);
 
   const { alertState, openAlert, closeAlert } = useAlert();
   const { dialogState, openDialog, closeDialog } = useDialog();
 
+  const { data: session } = useSession();
+
   const { data: majorMap } = useMajorMap();
+  const { mutateAsync } = useUserPostTimetables();
+
+  const router = useRouter();
+
+  const [saveLoading, setSaveLoading] = useState(false);
 
   const handleSelectTimetable = (
     index: number,
@@ -82,7 +92,7 @@ export default function Add({ timetables }: IAdd) {
     setAddedTimetables([...deleted]);
   };
 
-  const handleSaveAddedTimetables = () => {
+  const handleSaveClick = () => {
     const Timetables = addedTimetables.filter(
       ({ colorIndex }) => colorIndex !== TEMP_COLOR_INDEX,
     );
@@ -99,6 +109,57 @@ export default function Add({ timetables }: IAdd) {
     }
 
     openDialog();
+  };
+
+  const handleSaveAddedTimetables = async (major: string, grade: string) => {
+    if (!session?.user) {
+      openAlert(true, '데이터를 불러오는데 실패했습니다.');
+      return;
+    }
+    const { email: id, name: nickname } = session.user;
+
+    closeDialog();
+
+    const { ok, message } = await saveTimetables(
+      id as string,
+      nickname as string,
+      major,
+      grade,
+    );
+
+    if (ok) {
+      goMypage();
+    } else if (!ok) {
+      openAlert(true, message);
+    }
+  };
+
+  const saveTimetables = async (
+    id: string,
+    nickname: string,
+    major: string,
+    grade: string,
+  ) => {
+    setSaveLoading(true);
+
+    const totalGrades = calcTotalGrades(addedTimetables);
+    const { data } = await mutateAsync({
+      id,
+      nickname,
+      semester,
+      major,
+      grade,
+      totalGrades,
+      timetables: addedTimetables,
+    });
+
+    setSaveLoading(false);
+
+    return data;
+  };
+
+  const goMypage = () => {
+    router.push('/my');
   };
 
   const clearSelectedTimetable = useCallback(() => {
@@ -127,12 +188,18 @@ export default function Add({ timetables }: IAdd) {
           />
         </ViewerScrollBox>
         <ButtonWrapper>
-          <StyledButton variant='outlined' color='error'>
-            취소
-          </StyledButton>
-          <StyledButton variant='outlined' onClick={handleSaveAddedTimetables}>
-            저장
-          </StyledButton>
+          {saveLoading ? (
+            <Loading>저장중...</Loading>
+          ) : (
+            <>
+              <StyledButton variant='outlined' color='error' onClick={goMypage}>
+                취소
+              </StyledButton>
+              <StyledButton variant='outlined' onClick={handleSaveClick}>
+                저장
+              </StyledButton>
+            </>
+          )}
         </ButtonWrapper>
       </Main>
       <CommonAlert
@@ -143,7 +210,11 @@ export default function Add({ timetables }: IAdd) {
       />
       {majorMap ? (
         <CommonDialog isOpen={dialogState.isOpen} handleClose={closeDialog}>
-          <SaveDialog majorMap={majorMap} />
+          <SaveDialog
+            majorMap={majorMap}
+            handleClose={closeDialog}
+            handleSave={handleSaveAddedTimetables}
+          />
         </CommonDialog>
       ) : null}
     </Wrapper>
@@ -214,11 +285,17 @@ function check(addedTimetables: ITimetable[]) {
 }
 
 function checkMaximumGrades(addedTimetables: ITimetable[]) {
+  const totalGrades = calcTotalGrades(addedTimetables);
+
+  return MAXIMUM_GRADES < totalGrades;
+}
+
+function calcTotalGrades(addedTimetables: ITimetable[]) {
   const totalGrades = addedTimetables.reduce((prev, { grades }) => {
     return prev + grades;
   }, 0);
 
-  return MAXIMUM_GRADES <= totalGrades;
+  return totalGrades;
 }
 
 function checkOverlapName(addedTimetables: ITimetable[]) {
@@ -322,6 +399,13 @@ const StyledButton = styled(Button)`
   width: 100%;
 `;
 
+const Loading = styled.div`
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+`;
+
 import { GetStaticProps } from 'next';
 import { read } from '@/utils/json';
 
@@ -337,6 +421,6 @@ export const getStaticProps: GetStaticProps = ({ params }) => {
   const timetables = read<ITimetable[]>(semester);
 
   return {
-    props: { timetables },
+    props: { semester, timetables },
   };
 };
