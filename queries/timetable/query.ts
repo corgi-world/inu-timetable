@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { get } from '../httpMethods';
-import { majorMapService } from './services';
-import type { TypeMajorMap } from '@/types/timetable';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { get, post } from '../httpMethods';
+import { majorMapService, userPostService } from './services';
+import type { IUserTimetable, TypeMajorMap } from '@/types/timetable';
+import type { IDefaultPostResponse } from '@/types/apiResponse';
 
 export function useMajorMap() {
   const queryResult = useQuery<TypeMajorMap>(
@@ -11,4 +12,10 @@ export function useMajorMap() {
   );
 
   return queryResult;
+}
+
+export function useUserPostTimetables() {
+  return useMutation((data: IUserTimetable) =>
+    post<IDefaultPostResponse>(userPostService, data),
+  );
 }
