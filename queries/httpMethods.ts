@@ -1,9 +1,7 @@
-import { AxiosInstance, AxiosResponse } from 'axios';
+import { AxiosInstance } from 'axios';
 
 export function get(service: AxiosInstance, queryString = '') {
-  return service
-    .get(queryString)
-    .then((response: AxiosResponse<any, any>) => response.data);
+  return service.get(queryString).then((response) => response.data);
 }
 
 export function post<T>(service: AxiosInstance, data: unknown) {
