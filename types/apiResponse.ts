@@ -18,3 +18,7 @@ export interface IDefaultDeleteResponse {
 export interface IUserTimetableResponse extends IDefaultResponse {
   userTimetable?: IUserTimetable;
 }
+
+export interface IUserTimetablesResponse extends IDefaultResponse {
+  userTimetables?: IUserTimetable[];
+}
