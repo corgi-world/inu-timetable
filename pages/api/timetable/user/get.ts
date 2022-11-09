@@ -1,16 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import type { ITimetable, IUserTimetable } from '@/types/timetable';
+import type { ITimetable } from '@/types/timetable';
 import client from '@/prisma/client';
-
-type Data = {
-  ok: boolean;
-  message?: string;
-  userTimetable?: IUserTimetable;
-};
+import { IUserTimetableResponse } from '@/types/apiResponse';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>,
+  res: NextApiResponse<IUserTimetableResponse>,
 ) {
   const { id, semester } = req.query;
   if (!id || !semester) {
@@ -48,11 +43,9 @@ export default async function handler(
         timetables: JSON.parse(timetables as string) as ITimetable[],
       };
 
-      res.status(200).json({ ok: true, userTimetable });
+      res.status(200).json({ ok: true, message: '저장 완료', userTimetable });
     } else if (!result) {
-      res
-        .status(200)
-        .json({ ok: false, message: '불러오기 실패 - 데이터베이스 오류' });
+      res.status(200).json({ ok: true, message: '저장된 시간표가 없음' });
     }
   } catch {
     res

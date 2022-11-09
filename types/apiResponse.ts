@@ -1,12 +1,20 @@
 import { IUserTimetable } from './timetable';
 
+interface IDefaultResponse {
+  ok: boolean;
+  message: string;
+}
+
 export interface IDefaultPostResponse {
   ok: boolean;
   message: string;
 }
 
-export interface IUserTimetableResponse {
+export interface IDefaultDeleteResponse {
   ok: boolean;
-  message?: string;
+  message: string;
+}
+
+export interface IUserTimetableResponse extends IDefaultResponse {
   userTimetable?: IUserTimetable;
 }

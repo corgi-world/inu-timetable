@@ -22,7 +22,7 @@ import { CommonAlert, useAlert } from '@/components/CommonAlert';
 import { CommonDialog, useDialog } from '@/components/CommonDialog';
 import SaveDialog from '@/components/timetable/selector/SaveDialog';
 import { useSession } from 'next-auth/react';
-import { useMajorMap, useUserPostTimetables } from '@/queries/timetable/query';
+import { useMajorMap, useUserPostTimetable } from '@/queries/timetable/query';
 import { useRouter } from 'next/router';
 
 interface IAdd {
@@ -42,7 +42,7 @@ export default function Add({ semester, timetables }: IAdd) {
   const { data: session } = useSession();
 
   const { data: majorMap } = useMajorMap();
-  const { mutateAsync } = useUserPostTimetables();
+  const postUserTimetable = useUserPostTimetable();
 
   const router = useRouter();
 
@@ -143,7 +143,7 @@ export default function Add({ semester, timetables }: IAdd) {
     setSaveLoading(true);
 
     const totalGrades = calcTotalGrades(addedTimetables);
-    const { data } = await mutateAsync({
+    const { data } = await postUserTimetable({
       id,
       nickname,
       semester,
