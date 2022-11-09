@@ -111,7 +111,11 @@ export default function Add({ semester, timetables }: IAdd) {
     openDialog();
   };
 
-  const handleSaveAddedTimetables = async (major: string, grade: string) => {
+  const handleSaveAddedTimetables = async (
+    college: string,
+    major: string,
+    grade: string,
+  ) => {
     if (!session?.user) {
       openAlert(true, '데이터를 불러오는데 실패했습니다.');
       return;
@@ -123,6 +127,7 @@ export default function Add({ semester, timetables }: IAdd) {
     const { ok, message } = await saveTimetables(
       id as string,
       nickname as string,
+      college,
       major,
       grade,
     );
@@ -137,6 +142,7 @@ export default function Add({ semester, timetables }: IAdd) {
   const saveTimetables = async (
     id: string,
     nickname: string,
+    college: string,
     major: string,
     grade: string,
   ) => {
@@ -147,6 +153,7 @@ export default function Add({ semester, timetables }: IAdd) {
       id,
       nickname,
       semester,
+      college,
       major,
       grade,
       totalGrades,

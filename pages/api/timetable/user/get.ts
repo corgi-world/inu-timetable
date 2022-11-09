@@ -30,13 +30,22 @@ export default async function handler(
     });
 
     if (result) {
-      const { id, nickname, semester, major, grade, totalGrades, timetables } =
-        result;
+      const {
+        id,
+        nickname,
+        semester,
+        college,
+        major,
+        grade,
+        totalGrades,
+        timetables,
+      } = result;
 
       const userTimetable = {
         id,
         nickname,
         semester,
+        college,
         major,
         grade,
         totalGrades,

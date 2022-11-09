@@ -20,6 +20,7 @@ model Timetables {
   id          String
   nickname    String
   semester    String
+  college     String
   major       String
   grade       String
   totalGrades Int

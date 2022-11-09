@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 interface ISaveDialog {
   majorMap: TypeMajorMap;
   handleClose: () => void;
-  handleSave: (major: string, grade: string) => void;
+  handleSave: (college: string, major: string, grade: string) => void;
 }
 
 export default function SaveDialog({
@@ -70,7 +70,7 @@ export default function SaveDialog({
         </StyledButton>
         <StyledButton
           variant='outlined'
-          onClick={() => handleSave(major, grade)}
+          onClick={() => handleSave(college, major, grade)}
         >
           저장
         </StyledButton>

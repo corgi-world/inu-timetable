@@ -21,9 +21,6 @@ interface IMypage {
 
 export default function Mypage({ semesters, user }: IMypage) {
   const [semester, setSemester] = useState(semesters[0]);
-  const handleSemesterChange = (semester: string) => {
-    setSemester(semester);
-  };
 
   const { email: id } = user;
   const { data, isLoading, refetch } = useUserTimetable(id, semester);
@@ -92,11 +89,7 @@ export default function Mypage({ semesters, user }: IMypage) {
     <Wrapper>
       <ContentsWrapper>
         <OperationWrapper>
-          <Select
-            items={semesters}
-            value={semester}
-            onChange={handleSemesterChange}
-          />
+          <Select items={semesters} value={semester} onChange={setSemester} />
           {getOperaionButton()}
         </OperationWrapper>
         <Main>{getViewer()}</Main>
