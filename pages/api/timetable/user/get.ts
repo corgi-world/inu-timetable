@@ -50,9 +50,7 @@ export default async function handler(
 
       res.status(200).json({ ok: true, userTimetable });
     } else if (!result) {
-      res
-        .status(200)
-        .json({ ok: false, message: '불러오기 실패 - 데이터베이스 오류' });
+      res.status(200).json({ ok: true, message: '저장된 시간표가 없음' });
     }
   } catch {
     res
