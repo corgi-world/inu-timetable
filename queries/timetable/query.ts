@@ -1,9 +1,20 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { get, post } from '../httpMethods';
-import { majorMapService, userGetService, userPostService } from './services';
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+} from '@tanstack/react-query';
+import { get, post, _delete } from '../httpMethods';
+import {
+  majorMapService,
+  userDeleteService,
+  userGetService,
+  userPostService,
+} from './services';
 import type { IUserTimetable, TypeMajorMap } from '@/types/timetable';
 import type {
   IDefaultPostResponse,
+  IDefaultDeleteResponse,
   IUserTimetableResponse,
 } from '@/types/apiResponse';
 
@@ -25,12 +36,37 @@ export function useUserPostTimetable() {
   const queryClient = useQueryClient();
   return async (userTimetable: IUserTimetable) => {
     const { id, semester } = userTimetable;
-    await queryClient.invalidateQueries({
-      queryKey: ['userTimetable', id, semester],
-    });
+    await invalidateUserTimetable(queryClient, id, semester);
 
     return await mutateAsync(userTimetable);
   };
+}
+
+export function useUserDeleteTimetable() {
+  const { mutateAsync } = useMutation(
+    ({ id, semester }: { id: string; semester: string }) => {
+      const queryString = `?id=${id}&semester=${semester}`;
+
+      return _delete<IDefaultDeleteResponse>(userDeleteService, queryString);
+    },
+  );
+
+  const queryClient = useQueryClient();
+  return async (id: string, semester: string) => {
+    await invalidateUserTimetable(queryClient, id, semester);
+
+    return await mutateAsync({ id, semester });
+  };
+}
+
+async function invalidateUserTimetable(
+  queryClient: QueryClient,
+  id: string,
+  semester: string,
+) {
+  await queryClient.invalidateQueries({
+    queryKey: ['userTimetable', id, semester],
+  });
 }
 
 export function useUserTimetable(id: string, semester: string) {
