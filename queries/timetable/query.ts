@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { get, post } from '../httpMethods';
 import { majorMapService, userGetService, userPostService } from './services';
 import type { IUserTimetable, TypeMajorMap } from '@/types/timetable';
@@ -17,10 +17,20 @@ export function useMajorMap() {
   return queryResult;
 }
 
-export function useUserPostTimetables() {
-  return useMutation((data: IUserTimetable) =>
-    post<IDefaultPostResponse>(userPostService, data),
+export function useUserPostTimetable() {
+  const { mutateAsync } = useMutation((userTimetable: IUserTimetable) =>
+    post<IDefaultPostResponse>(userPostService, userTimetable),
   );
+
+  const queryClient = useQueryClient();
+  return async (userTimetable: IUserTimetable) => {
+    const { id, semester } = userTimetable;
+    await queryClient.invalidateQueries({
+      queryKey: ['userTimetable', id, semester],
+    });
+
+    return await mutateAsync(userTimetable);
+  };
 }
 
 export function useUserTimetable(id: string, semester: string) {
