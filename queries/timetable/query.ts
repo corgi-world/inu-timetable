@@ -7,6 +7,7 @@ import {
 import { get, post, _delete } from '../httpMethods';
 import {
   majorMapService,
+  statisticsGetService,
   userDeleteService,
   userGetService,
   userPostService,
@@ -76,6 +77,23 @@ export function useUserTimetable(id: string, semester: string) {
     ['userTimetable', id, semester],
     () => get(userGetService, queryString),
     { staleTime: 60 * 1000 * 60 },
+  );
+
+  return queryResult;
+}
+
+export function useStatisticsTimetables(
+  semester: string,
+  college: string,
+  major: string,
+  grade: string,
+) {
+  const queryString = `?semester=${semester}&college=${college}&major=${major}&grade=${grade}`;
+
+  const queryResult = useQuery<IUserTimetableResponse>(
+    ['statistics', semester, college, major, grade],
+    () => get(statisticsGetService, queryString),
+    { staleTime: 60 * 1000 * 60, enabled: false },
   );
 
   return queryResult;
