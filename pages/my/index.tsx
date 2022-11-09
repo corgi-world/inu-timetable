@@ -3,8 +3,13 @@ import styled from 'styled-components';
 import Select from '@/components/MuiSelect';
 import Button from '@mui/material/Button';
 import Link from 'next/link';
-import { useUserTimetable } from '@/queries/timetable/query';
+import {
+  useUserDeleteTimetable,
+  useUserTimetable,
+} from '@/queries/timetable/query';
 import CircularProgress from '@mui/material/CircularProgress';
+import Viewer from '@/components/timetable/viewer';
+import { CommonAlert, useAlert } from '@/components/CommonAlert';
 
 interface IMypage {
   semesters: string[];
@@ -21,8 +26,24 @@ export default function Mypage({ semesters, user }: IMypage) {
   };
 
   const { email: id } = user;
-  const { data, isLoading } = useUserTimetable(id, semester);
+  const { data, isLoading, refetch } = useUserTimetable(id, semester);
   const userTimetable = data?.userTimetable;
+
+  const deleteUserTimetable = useUserDeleteTimetable();
+
+  const { alertState, openAlert, closeAlert } = useAlert();
+
+  const handleDelete = async () => {
+    const {
+      data: { ok, message },
+    } = await deleteUserTimetable(id, semester);
+
+    if (ok) {
+      refetch();
+    } else if (!ok) {
+      openAlert(true, message);
+    }
+  };
 
   const getOperaionButton = () => {
     if (isLoading) return <></>;
@@ -30,7 +51,7 @@ export default function Mypage({ semesters, user }: IMypage) {
     if (userTimetable) {
       return (
         <ButtonWrapper>
-          <Button variant='outlined' color='error'>
+          <Button variant='outlined' color='error' onClick={handleDelete}>
             삭제
           </Button>
         </ButtonWrapper>
@@ -80,6 +101,12 @@ export default function Mypage({ semesters, user }: IMypage) {
         </OperationWrapper>
         <Main>{getViewer()}</Main>
       </ContentsWrapper>
+      <CommonAlert
+        isOpen={alertState.isOpen}
+        isError={alertState.isError}
+        message={alertState.message}
+        handleClose={closeAlert}
+      />
     </Wrapper>
   );
 }
@@ -141,7 +168,6 @@ Mypage.getLayout = function getLayout(page: JSX.Element) {
 import { redirectNotAuthUser } from '@/utils/auth';
 import { NextPageContext } from 'next';
 import { read } from '@/utils/json';
-import Viewer from '@/components/timetable/viewer';
 
 export async function getServerSideProps(context: NextPageContext) {
   const { user, redirect } = await redirectNotAuthUser(context.req);
