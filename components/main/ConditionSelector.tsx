@@ -1,40 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import type { TypeColleges, TypeMajorMap } from '@/types/timetable';
 import Select from '@/components/MuiSelect';
-import { GRADES } from '@/consts/timetable';
 import Button from '@mui/material/Button';
 
 interface IConditionSelector {
   semesters: string[];
-  majorMap: TypeMajorMap;
-  handleSearch: (
-    semester: string,
-    college: string,
-    major: string,
-    grade: string,
-  ) => void;
+  semester: string;
+  setSemester: React.Dispatch<React.SetStateAction<string>>;
+  colleges: string[];
+  college: string;
+  setCollege: React.Dispatch<React.SetStateAction<string>>;
+  majors: string[];
+  major: string;
+  setMajor: React.Dispatch<React.SetStateAction<string>>;
+  grades: string[];
+  grade: string;
+  setGrade: React.Dispatch<React.SetStateAction<string>>;
+  handleSearch: () => void;
 }
 
 export default function ConditionSelector({
   semesters,
-  majorMap,
+  semester,
+  setSemester,
+  colleges,
+  college,
+  setCollege,
+  majors,
+  major,
+  setMajor,
+  grades,
+  grade,
+  setGrade,
   handleSearch,
 }: IConditionSelector) {
-  const {
-    semester,
-    setSemester,
-    colleges,
-    college,
-    setCollege,
-    majors,
-    major,
-    setMajor,
-    grades,
-    grade,
-    setGrade,
-  } = useCondition(semesters, majorMap);
-
   return (
     <Wrapper>
       <SelectWrapper>
@@ -64,51 +63,12 @@ export default function ConditionSelector({
         />
       </SelectWrapper>
       <ButtonWrapper>
-        <StyledButton
-          variant='contained'
-          onClick={() => {
-            handleSearch(semester, college, major, grade);
-          }}
-        >
+        <StyledButton variant='contained' onClick={handleSearch}>
           검색
         </StyledButton>
       </ButtonWrapper>
     </Wrapper>
   );
-}
-
-function useCondition(semesters: string[], majorMap: TypeMajorMap) {
-  const [semester, setSemester] = useState(semesters[0]);
-
-  const colleges = ['모든 단과대학', ...Object.keys(majorMap)];
-  const [college, setCollege] = useState(colleges[0]);
-
-  const majors =
-    college === colleges[0]
-      ? ['모든 과']
-      : ['모든 과', ...majorMap[college as TypeColleges]];
-  const [major, setMajor] = useState(majors[0]);
-
-  const grades = ['모든 학년', ...GRADES];
-  const [grade, setGrade] = useState(grades[0]);
-
-  useEffect(() => {
-    setMajor(majors[0]);
-  }, [college]);
-
-  return {
-    semester,
-    setSemester,
-    colleges,
-    college,
-    setCollege,
-    majors,
-    major,
-    setMajor,
-    grades,
-    grade,
-    setGrade,
-  };
 }
 
 const Wrapper = styled.div`
