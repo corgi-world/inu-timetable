@@ -16,8 +16,16 @@ export default async function handler(
     return;
   }
 
-  const { id, nickname, semester, major, grade, totalGrades, timetables } =
-    req.body;
+  const {
+    id,
+    nickname,
+    semester,
+    college,
+    major,
+    grade,
+    totalGrades,
+    timetables,
+  } = req.body;
 
   try {
     await client.timetables.create({
@@ -25,6 +33,7 @@ export default async function handler(
         id,
         nickname,
         semester,
+        college,
         major,
         grade,
         totalGrades,

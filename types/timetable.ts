@@ -39,6 +39,7 @@ export interface IUserTimetable {
   id: string;
   nickname: string;
   semester: string;
+  college: string;
   major: string;
   grade: string;
   totalGrades: number;

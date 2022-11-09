@@ -30,20 +30,31 @@ export default async function handler(
     });
 
     if (result) {
-      const { id, nickname, semester, major, grade, totalGrades, timetables } =
-        result;
+      const {
+        id,
+        nickname,
+        semester,
+        college,
+        major,
+        grade,
+        totalGrades,
+        timetables,
+      } = result;
 
       const userTimetable = {
         id,
         nickname,
         semester,
+        college,
         major,
         grade,
         totalGrades,
         timetables: JSON.parse(timetables as string) as ITimetable[],
       };
 
-      res.status(200).json({ ok: true, message: '저장 완료', userTimetable });
+      res
+        .status(200)
+        .json({ ok: true, message: '불러오기 완료', userTimetable });
     } else if (!result) {
       res.status(200).json({ ok: true, message: '저장된 시간표가 없음' });
     }
