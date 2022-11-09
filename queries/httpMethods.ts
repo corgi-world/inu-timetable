@@ -12,6 +12,6 @@ export function put(service: AxiosInstance, queryString = '', data: unknown) {
   return service.put(queryString, data);
 }
 
-export function _delete(service: AxiosInstance, queryString = '') {
-  return service.delete(queryString);
+export function _delete<T>(service: AxiosInstance, queryString = '') {
+  return service.delete<T>(queryString);
 }
