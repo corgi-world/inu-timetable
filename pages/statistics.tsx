@@ -10,6 +10,21 @@ interface IStatistics {
   semesters: string[];
   majorMap: TypeMajorMap;
 }
+function useStatistics(
+  semester: string,
+  college: string,
+  major: string,
+  grade: string,
+) {
+  const { isFetching, data, refetch } = useStatisticsTimetables(
+    semester,
+    college,
+    major,
+    grade,
+  );
+
+  return { isFetching, data, refetch };
+}
 
 export default function Statistics({ semesters, majorMap }: IStatistics) {
   const {
@@ -26,7 +41,7 @@ export default function Statistics({ semesters, majorMap }: IStatistics) {
     setGrade,
   } = useCondition(semesters, majorMap);
 
-  const { isFetching, data, refetch } = useStatisticsTimetables(
+  const { isFetching, data, refetch } = useStatistics(
     semester,
     college,
     major,
@@ -37,36 +52,38 @@ export default function Statistics({ semesters, majorMap }: IStatistics) {
     refetch();
   };
 
-  console.log(isFetching, data);
+  const renderMainContents = () => {
+    if (isFetching) {
+      return (
+        <SpinnerWrapper>
+          <CircularProgress size={60} />
+        </SpinnerWrapper>
+      );
+    } else if (data && data.userTimetables) {
+      return <ContentsManager userTimetables={data.userTimetables} />;
+    } else {
+      return <></>;
+    }
+  };
 
   return (
     <Wrapper>
-      <ContentsWrapper>
-        <ConditionSelector
-          semesters={semesters}
-          semester={semester}
-          setSemester={setSemester}
-          colleges={colleges}
-          college={college}
-          setCollege={setCollege}
-          majors={majors}
-          major={major}
-          setMajor={setMajor}
-          grades={grades}
-          grade={grade}
-          setGrade={setGrade}
-          handleSearch={handleSearch}
-        />
-      </ContentsWrapper>
-      <Main>
-        {isFetching ? (
-          <SpinnerWrapper>
-            <CircularProgress size={60} />
-          </SpinnerWrapper>
-        ) : (
-          <ChartWrapper>Hello</ChartWrapper>
-        )}
-      </Main>
+      <ConditionSelector
+        semesters={semesters}
+        semester={semester}
+        setSemester={setSemester}
+        colleges={colleges}
+        college={college}
+        setCollege={setCollege}
+        majors={majors}
+        major={major}
+        setMajor={setMajor}
+        grades={grades}
+        grade={grade}
+        setGrade={setGrade}
+        handleSearch={handleSearch}
+      />
+      <Main>{renderMainContents()}</Main>
     </Wrapper>
   );
 }
@@ -107,38 +124,25 @@ function useCondition(semesters: string[], majorMap: TypeMajorMap) {
 
 const Wrapper = styled.div`
   width: 100%;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-`;
-
-const ContentsWrapper = styled.div`
-  width: 100%;
   @media (min-width: ${({ theme: { size } }) => size.mobile}) {
     width: 950px;
   }
-
-  display: flex;
-  flex-direction: column;
+  margin: 0 auto;
+  padding: 10px;
 `;
 
 const Main = styled.main`
   width: 100%;
+  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
 `;
 
 const SpinnerWrapper = styled.div`
-  height: 50vh;
+  height: 40vh;
   display: flex;
   align-items: center;
-`;
-
-const ChartWrapper = styled.div`
-  display: flex;
 `;
 
 import Layout from '@/components/Layout';
@@ -147,6 +151,7 @@ Statistics.getLayout = function getLayout(page: JSX.Element) {
 };
 
 import { read } from '@/utils/json';
+import ContentsManager from '@/components/statistics/ContentsManager';
 export async function getStaticProps() {
   const semesters = read<string[]>('semesters');
   const majorMap = read<TypeMajorMap>('majorMap');
