@@ -17,6 +17,7 @@ import type {
   IDefaultPostResponse,
   IDefaultDeleteResponse,
   IUserTimetableResponse,
+  IUserTimetablesResponse,
 } from '@/types/apiResponse';
 
 export function useMajorMap() {
@@ -90,10 +91,10 @@ export function useStatisticsTimetables(
 ) {
   const queryString = `?semester=${semester}&college=${college}&major=${major}&grade=${grade}`;
 
-  const queryResult = useQuery<IUserTimetableResponse>(
+  const queryResult = useQuery<IUserTimetablesResponse>(
     ['statistics', semester, college, major, grade],
     () => get(statisticsGetService, queryString),
-    { staleTime: 60 * 1000 * 60, enabled: false },
+    { staleTime: 60 * 1000 * 60, enabled: false, keepPreviousData: true },
   );
 
   return queryResult;
