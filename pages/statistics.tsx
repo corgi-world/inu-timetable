@@ -5,6 +5,8 @@ import { GRADES } from '@/consts/timetable';
 import ConditionSelector from '@/components/main/ConditionSelector';
 import { useStatisticsTimetables } from '@/queries/timetable/query';
 import CircularProgress from '@mui/material/CircularProgress';
+import ContentsManager from '@/components/statistics/ContentsManager';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface IStatistics {
   semesters: string[];
@@ -51,6 +53,13 @@ export default function Statistics({ semesters, majorMap }: IStatistics) {
   const handleSearch = () => {
     refetch();
   };
+
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const queryKey = ['statistics', semester, college, major, grade];
+    const data = queryClient.getQueryData(queryKey);
+    if (!data) refetch();
+  }, []);
 
   const renderMainContents = () => {
     if (isFetching) {
@@ -151,7 +160,7 @@ Statistics.getLayout = function getLayout(page: JSX.Element) {
 };
 
 import { read } from '@/utils/json';
-import ContentsManager from '@/components/statistics/ContentsManager';
+import { IUserTimetablesResponse } from '@/types/apiResponse';
 export async function getStaticProps() {
   const semesters = read<string[]>('semesters');
   const majorMap = read<TypeMajorMap>('majorMap');
