@@ -37,7 +37,7 @@ const options: ApexOptions = {
     },
   },
   yaxis: {
-    labels: { show: false },
+    labels: { show: true },
   },
   tooltip: {
     marker: { show: false },
