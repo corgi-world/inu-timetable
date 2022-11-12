@@ -12,21 +12,6 @@ interface IStatistics {
   semesters: string[];
   majorMap: TypeMajorMap;
 }
-function useStatistics(
-  semester: string,
-  college: string,
-  major: string,
-  grade: string,
-) {
-  const { isFetching, data, refetch } = useStatisticsTimetables(
-    semester,
-    college,
-    major,
-    grade,
-  );
-
-  return { isFetching, data, refetch };
-}
 
 export default function Statistics({ semesters, majorMap }: IStatistics) {
   const {
@@ -43,7 +28,7 @@ export default function Statistics({ semesters, majorMap }: IStatistics) {
     setGrade,
   } = useCondition(semesters, majorMap);
 
-  const { isFetching, data, refetch } = useStatistics(
+  const { isFetching, data, refetch } = useStatisticsTimetables(
     semester,
     college,
     major,
@@ -90,6 +75,7 @@ export default function Statistics({ semesters, majorMap }: IStatistics) {
         grades={grades}
         grade={grade}
         setGrade={setGrade}
+        needSearchButton={true}
         handleSearch={handleSearch}
       />
       <Main>{renderMainContents()}</Main>
@@ -160,7 +146,6 @@ Statistics.getLayout = function getLayout(page: JSX.Element) {
 };
 
 import { read } from '@/utils/json';
-import { IUserTimetablesResponse } from '@/types/apiResponse';
 export async function getStaticProps() {
   const semesters = read<string[]>('semesters');
   const majorMap = read<TypeMajorMap>('majorMap');
