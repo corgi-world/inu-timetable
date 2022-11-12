@@ -49,7 +49,7 @@ const Wrapper = styled.div`
   position: absolute;
   bottom: 10px;
   width: 100%;
-  @media (min-width: ${({ theme: { size } }) => size.mobile}) {
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
     width: 380px;
   }
 `;
