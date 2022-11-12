@@ -123,10 +123,10 @@ const Wrapper = styled.div`
     width: 950px;
   }
   margin: 0 auto;
-  padding: 10px;
 `;
 
 const Main = styled.main`
+  padding: 10px;
   width: 100%;
   margin-top: 30px;
   display: flex;
