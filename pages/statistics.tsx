@@ -127,8 +127,12 @@ const Wrapper = styled.div`
 
 const Main = styled.main`
   padding: 10px;
+  margin-top: 10px;
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
+    padding: 0px;
+    margin-top: 20px;
+  }
   width: 100%;
-  margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
