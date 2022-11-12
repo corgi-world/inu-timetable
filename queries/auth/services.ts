@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/api/auth';
+// const BASE_URL = 'http://localhost:3000/api/auth';
+const BASE_URL = '/api/auth';
 const SIGNUP_URL = 'signup';
 
 export const signupService = axios.create({

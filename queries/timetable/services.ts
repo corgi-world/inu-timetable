@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000/api/timetable';
+// const BASE_URL = 'http://localhost:3000/api/timetable';
+const BASE_URL = '/api/timetable';
 const MAJOR_MAP_URL = 'majorMap';
 const USER_POST_URL = 'user/post';
 const USER_GET_URL = 'user/get';
