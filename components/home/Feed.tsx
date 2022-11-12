@@ -6,6 +6,7 @@ import Viewer from '@/components/timetable/viewer';
 interface IFeed {
   timetables: ITimetable[];
   major: string;
+  grade: string;
   nickname: string;
   totalGrades: number;
 }
@@ -13,15 +14,15 @@ interface IFeed {
 export default function Feed({
   timetables,
   major,
+  grade,
   nickname,
   totalGrades,
 }: IFeed) {
   return (
     <Wrapper>
       <InfoWrapper>
-        <p>{major}</p>
-        <p>{nickname}</p>
-        <p>{`총 ${totalGrades}학점`}</p>
+        <Text>{`${major} ${grade} - ${nickname}`}</Text>
+        <Text>{`${totalGrades}학점`}</Text>
       </InfoWrapper>
       <Viewer fullMode={false} timetables={timetables} />
     </Wrapper>
@@ -37,4 +38,8 @@ const InfoWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 5px;
+`;
+
+const Text = styled.p`
+  font-weight: 600;
 `;
