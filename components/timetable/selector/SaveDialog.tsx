@@ -104,11 +104,11 @@ function useMajor(majorMap: TypeMajorMap) {
 
 const Wrapper = styled.div`
   background-color: ${({ theme: { color } }) => color.background};
-  width: 340px;
+  width: 310px;
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding: 35px;
+  padding: 30px 20px 30px 20px;
 `;
 
 const Title = styled.h3`
