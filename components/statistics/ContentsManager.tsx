@@ -57,7 +57,19 @@ function calculateTableData(userTimetables: IUserTimetable[]) {
     }
   }
 
-  return { subjectNames: Object.keys(subjectCountMap), subjectCountMap };
+  const subjectNames = Object.keys(subjectCountMap);
+  const sortedSubjectNames = subjectNames.sort((a, b) => {
+    return subjectCountMap[a] < subjectCountMap[b] ? 1 : -1;
+  });
+
+  const length = sortedSubjectNames.length;
+  const MAX_COUNT = 30;
+  const filteredSubjectNames =
+    MAX_COUNT < length
+      ? sortedSubjectNames.slice(0, MAX_COUNT)
+      : sortedSubjectNames;
+
+  return { subjectNames: filteredSubjectNames, subjectCountMap };
 }
 
 function calculateChartProps(userTimetables: IUserTimetable[]) {
