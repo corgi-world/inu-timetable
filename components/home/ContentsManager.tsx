@@ -41,6 +41,9 @@ export default function ContentsManager({ userTimetables }: IContentsManager) {
 
 const Wrapper = styled.div`
   width: 100%;
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
+    width: 380px;
+  }
   display: flex;
   flex-direction: column;
   gap: 20px;
