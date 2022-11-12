@@ -107,3 +107,20 @@ export function useStatisticsTimetables(
 
   return queryResult;
 }
+
+export function useFeedTimetables(
+  semester: string,
+  college: string,
+  major: string,
+  grade: string,
+) {
+  const queryString = `?semester=${semester}&college=${college}&major=${major}&grade=${grade}`;
+
+  const queryResult = useQuery<IUserTimetablesResponse>(
+    ['statistics', semester, college, major, grade],
+    () => get(statisticsGetService, queryString),
+    { staleTime: 60 * 1000 * 60 },
+  );
+
+  return queryResult;
+}
