@@ -14,10 +14,21 @@ import {
 interface IViewer {
   timetables: ITimetable[];
   handleDeleteTimetable?: (classNumber: string) => void;
+  fullMode?: boolean;
 }
 
-export default function Viewer({ timetables, handleDeleteTimetable }: IViewer) {
+export default function Viewer({
+  timetables,
+  handleDeleteTimetable,
+  fullMode = true,
+}: IViewer) {
   const { online, offline } = filterTimetablesByIsOnline(timetables);
+
+  const firstHour = HOURS[0];
+  const lastHour = getLastHour(timetables);
+  const hours = fullMode
+    ? HOURS
+    : [...new Array(lastHour - firstHour + 1)].map((_, i) => firstHour + i);
 
   return (
     <Wrapper>
@@ -29,11 +40,11 @@ export default function Viewer({ timetables, handleDeleteTimetable }: IViewer) {
           handleDeleteTimetable={handleDeleteTimetable}
         />
       ))}
-      <Table>
+      <Table rowCount={hours.length}>
         {DAYS.map((day) => (
           <ColumnHeader key={day}>{day}</ColumnHeader>
         ))}
-        {HOURS.map((hour) => {
+        {hours.map((hour) => {
           return DAYS.map((day, index) =>
             index === 0 ? (
               <RowHeader key={day + hour}>
@@ -125,16 +136,42 @@ function calcSubjectPosition(startMinute: number, workingMinutes: number) {
   return { top, height };
 }
 
+function getLastHour(timetables: ITimetable[]) {
+  let lastHour = 9;
+
+  for (const { schedules } of timetables) {
+    if (schedules) {
+      for (const { startHour, startMinute, workingMinutes } of schedules) {
+        const date = new Date();
+        date.setHours(startHour);
+        date.setMinutes(startMinute);
+        date.setMinutes(date.getMinutes() + workingMinutes);
+        const endHour = date.getHours();
+        if (lastHour < endHour) lastHour = endHour;
+      }
+    }
+  }
+
+  lastHour += 1;
+  const MAX_HOUR = HOURS[HOURS.length - 1];
+  lastHour = MAX_HOUR < lastHour ? MAX_HOUR : lastHour;
+
+  return lastHour;
+}
+
 const Wrapper = styled.div`
   width: 100%;
   margin: 0 auto;
   background-color: white;
 `;
 
-const Table = styled.div`
+const Table = styled.div<{ rowCount: number }>`
   display: grid;
   grid-template-columns: 20px repeat(5, 1fr);
-  grid-template-rows: 25px repeat(15, ${`${CELL_HEIGHT}px`});
+  grid-template-rows: 25px repeat(
+      ${({ rowCount }) => rowCount},
+      ${`${CELL_HEIGHT}px`}
+    );
   overflow: hidden;
 
   border-top: 1px solid #d6d6d6;

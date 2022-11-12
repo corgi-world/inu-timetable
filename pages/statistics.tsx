@@ -5,25 +5,12 @@ import { GRADES } from '@/consts/timetable';
 import ConditionSelector from '@/components/main/ConditionSelector';
 import { useStatisticsTimetables } from '@/queries/timetable/query';
 import CircularProgress from '@mui/material/CircularProgress';
+import ContentsManager from '@/components/statistics/ContentsManager';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface IStatistics {
   semesters: string[];
   majorMap: TypeMajorMap;
-}
-function useStatistics(
-  semester: string,
-  college: string,
-  major: string,
-  grade: string,
-) {
-  const { isFetching, data, refetch } = useStatisticsTimetables(
-    semester,
-    college,
-    major,
-    grade,
-  );
-
-  return { isFetching, data, refetch };
 }
 
 export default function Statistics({ semesters, majorMap }: IStatistics) {
@@ -41,7 +28,7 @@ export default function Statistics({ semesters, majorMap }: IStatistics) {
     setGrade,
   } = useCondition(semesters, majorMap);
 
-  const { isFetching, data, refetch } = useStatistics(
+  const { isFetching, data, refetch } = useStatisticsTimetables(
     semester,
     college,
     major,
@@ -51,6 +38,13 @@ export default function Statistics({ semesters, majorMap }: IStatistics) {
   const handleSearch = () => {
     refetch();
   };
+
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const queryKey = ['statistics', semester, college, major, grade];
+    const data = queryClient.getQueryData(queryKey);
+    if (!data) refetch();
+  }, []);
 
   const renderMainContents = () => {
     if (isFetching) {
@@ -81,6 +75,7 @@ export default function Statistics({ semesters, majorMap }: IStatistics) {
         grades={grades}
         grade={grade}
         setGrade={setGrade}
+        needSearchButton={true}
         handleSearch={handleSearch}
       />
       <Main>{renderMainContents()}</Main>
@@ -151,7 +146,6 @@ Statistics.getLayout = function getLayout(page: JSX.Element) {
 };
 
 import { read } from '@/utils/json';
-import ContentsManager from '@/components/statistics/ContentsManager';
 export async function getStaticProps() {
   const semesters = read<string[]>('semesters');
   const majorMap = read<TypeMajorMap>('majorMap');

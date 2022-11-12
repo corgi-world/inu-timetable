@@ -39,6 +39,7 @@ export function useUserPostTimetable() {
   return async (userTimetable: IUserTimetable) => {
     const { id, semester } = userTimetable;
     await invalidateUserTimetable(queryClient, id, semester);
+    removeStatisticsQueries(queryClient, semester);
 
     return await mutateAsync(userTimetable);
   };
@@ -56,6 +57,7 @@ export function useUserDeleteTimetable() {
   const queryClient = useQueryClient();
   return async (id: string, semester: string) => {
     await invalidateUserTimetable(queryClient, id, semester);
+    removeStatisticsQueries(queryClient, semester);
 
     return await mutateAsync({ id, semester });
   };
@@ -68,6 +70,12 @@ async function invalidateUserTimetable(
 ) {
   await queryClient.invalidateQueries({
     queryKey: ['userTimetable', id, semester],
+  });
+}
+
+function removeStatisticsQueries(queryClient: QueryClient, semester: string) {
+  queryClient.removeQueries({
+    queryKey: ['statistics', semester],
   });
 }
 
@@ -95,6 +103,23 @@ export function useStatisticsTimetables(
     ['statistics', semester, college, major, grade],
     () => get(statisticsGetService, queryString),
     { staleTime: 60 * 1000 * 60, enabled: false, keepPreviousData: true },
+  );
+
+  return queryResult;
+}
+
+export function useFeedTimetables(
+  semester: string,
+  college: string,
+  major: string,
+  grade: string,
+) {
+  const queryString = `?semester=${semester}&college=${college}&major=${major}&grade=${grade}`;
+
+  const queryResult = useQuery<IUserTimetablesResponse>(
+    ['statistics', semester, college, major, grade],
+    () => get(statisticsGetService, queryString),
+    { staleTime: 60 * 1000 * 60 },
   );
 
   return queryResult;

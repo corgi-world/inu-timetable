@@ -16,7 +16,8 @@ interface IConditionSelector {
   grades: string[];
   grade: string;
   setGrade: React.Dispatch<React.SetStateAction<string>>;
-  handleSearch: () => void;
+  needSearchButton: boolean;
+  handleSearch?: () => void;
 }
 
 export default function ConditionSelector({
@@ -32,6 +33,7 @@ export default function ConditionSelector({
   grades,
   grade,
   setGrade,
+  needSearchButton,
   handleSearch,
 }: IConditionSelector) {
   return (
@@ -62,11 +64,22 @@ export default function ConditionSelector({
           width={'100%'}
         />
       </SelectWrapper>
-      <ButtonWrapper>
-        <StyledButton variant='contained' onClick={handleSearch}>
-          검색
-        </StyledButton>
-      </ButtonWrapper>
+      {needSearchButton ? (
+        <ButtonWrapper>
+          <StyledButton
+            variant='contained'
+            onClick={() => {
+              if (handleSearch) {
+                handleSearch();
+              }
+            }}
+          >
+            검색
+          </StyledButton>
+        </ButtonWrapper>
+      ) : (
+        <></>
+      )}
     </Wrapper>
   );
 }
