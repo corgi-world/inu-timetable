@@ -25,19 +25,21 @@ function TotalGradesChart({ categories, data }: IChartProps) {
 export default React.memo(TotalGradesChart);
 
 const options: ApexOptions = {
+  plotOptions: {
+    bar: {
+      horizontal: true,
+    },
+  },
   dataLabels: {
     enabled: true,
     style: { colors: ['black'], fontSize: '15px' },
     formatter: (v: number) => v + '명',
   },
   xaxis: {
-    position: 'bottom',
-    labels: {
-      style: { fontSize: '15px' },
-    },
+    labels: { show: false },
   },
   yaxis: {
-    labels: { show: true },
+    labels: { show: true, style: { fontSize: '14px' } },
   },
   tooltip: {
     marker: { show: false },
