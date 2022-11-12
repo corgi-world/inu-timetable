@@ -115,7 +115,7 @@ const Wrapper = styled.div`
 const Main = styled.main`
   padding: 10px;
   width: 100%;
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
