@@ -43,7 +43,10 @@ export default function Navigation() {
 }
 
 const Wrapper = styled.div`
+  width: 100%;
+  top: 0;
   position: sticky;
+  z-index: 999;
   display: flex;
   justify-content: center;
   border-bottom: 1px solid lightgray;
