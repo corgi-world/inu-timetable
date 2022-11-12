@@ -27,7 +27,7 @@ export default function Home({ semesters, majorMap }: IStatistics) {
     setGrade,
   } = useCondition(semesters, majorMap);
 
-  const { isFetching, data } = useFeedTimetables(
+  const { isLoading, data } = useFeedTimetables(
     semester,
     college,
     major,
@@ -35,7 +35,7 @@ export default function Home({ semesters, majorMap }: IStatistics) {
   );
 
   const renderMainContents = () => {
-    if (isFetching) {
+    if (isLoading) {
       return (
         <SpinnerWrapper>
           <CircularProgress size={60} />
