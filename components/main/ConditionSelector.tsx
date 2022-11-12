@@ -85,11 +85,14 @@ export default function ConditionSelector({
 }
 
 const Wrapper = styled.div`
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  @media (min-width: ${({ theme: { size } }) => size.mobile}) {
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
     flex-direction: row;
     justify-content: space-between;
+    margin-top: 10px;
+    padding: 0px;
   }
   gap: 5px;
 `;
@@ -98,7 +101,7 @@ const SelectWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
 
-  @media (min-width: ${({ theme: { size } }) => size.mobile}) {
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
     display: flex;
   }
   gap: 5px;

@@ -40,6 +40,9 @@ export default async function handler(
               },
         },
       },
+      orderBy: {
+        index: 'desc',
+      },
       take: 500,
     });
 

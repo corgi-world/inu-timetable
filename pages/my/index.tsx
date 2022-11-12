@@ -114,7 +114,7 @@ const Wrapper = styled.div`
 const ContentsWrapper = styled.div`
   width: 100%;
   height: 100%;
-  @media (min-width: ${({ theme: { size } }) => size.mobile}) {
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
     width: 950px;
   }
 
@@ -148,7 +148,7 @@ const SpinnerWrapper = styled.div`
 const ViewerWrapper = styled.div`
   margin-top: 20px;
   width: 100%;
-  @media (min-width: ${({ theme: { size } }) => size.mobile}) {
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
     width: 380px;
   }
 `;

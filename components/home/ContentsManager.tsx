@@ -13,11 +13,20 @@ export default function ContentsManager({ userTimetables }: IContentsManager) {
     <Wrapper>
       {0 < length ? (
         userTimetables.map(
-          ({ id, semester, timetables, major, nickname, totalGrades }) => (
+          ({
+            id,
+            semester,
+            timetables,
+            major,
+            grade,
+            nickname,
+            totalGrades,
+          }) => (
             <Feed
               key={`${id}${semester}`}
               timetables={timetables}
               major={major}
+              grade={grade}
               nickname={nickname}
               totalGrades={totalGrades}
             />
@@ -32,6 +41,10 @@ export default function ContentsManager({ userTimetables }: IContentsManager) {
 
 const Wrapper = styled.div`
   width: 100%;
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
+    width: 380px;
+  }
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
 `;

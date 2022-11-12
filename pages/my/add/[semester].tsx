@@ -383,7 +383,7 @@ const Wrapper = styled.div`
 
 const Main = styled.main`
   width: 100%;
-  @media (min-width: ${({ theme: { size } }) => size.mobile}) {
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
     width: 380px;
   }
 

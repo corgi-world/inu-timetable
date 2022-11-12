@@ -1,7 +1,7 @@
 import { typeSize, typeColor } from './styled';
 
 const size: typeSize = {
-  mobile: '768px',
+  desktop: '1024px',
 };
 
 const color: typeColor = {

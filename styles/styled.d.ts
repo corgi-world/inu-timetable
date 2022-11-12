@@ -1,5 +1,5 @@
 export interface typeSize {
-  mobile: string;
+  desktop: string;
 }
 export interface typeColor {
   text: string;

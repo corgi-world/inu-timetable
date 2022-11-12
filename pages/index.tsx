@@ -106,16 +106,16 @@ function useCondition(semesters: string[], majorMap: TypeMajorMap) {
 
 const Wrapper = styled.div`
   width: 100%;
-  @media (min-width: ${({ theme: { size } }) => size.mobile}) {
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
     width: 950px;
   }
   margin: 0 auto;
-  padding: 10px;
 `;
 
 const Main = styled.main`
+  padding: 10px;
   width: 100%;
-  margin-top: 30px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
