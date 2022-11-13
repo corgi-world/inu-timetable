@@ -82,13 +82,18 @@ function calculateChartProps(userTimetables: IUserTimetable[]) {
     {},
   );
 
-  const keys = Object.keys(totalGradesCountMap);
-  const length = keys.length;
-  const MAX_COUNT = 7;
-  const totalGradesList = MAX_COUNT < length ? keys.slice(0, MAX_COUNT) : keys;
+  const gradesList = Object.keys(totalGradesCountMap);
+  const sortedGrades = gradesList.sort((a, b) => {
+    return totalGradesCountMap[+a] < totalGradesCountMap[+b] ? 1 : -1;
+  });
 
-  const categories = totalGradesList.map((grades) => `${grades}학점`);
-  const data = totalGradesList.map((grades) => totalGradesCountMap[+grades]);
+  const length = sortedGrades.length;
+  const MAX_COUNT = 7;
+  const filteredGradesList =
+    MAX_COUNT < length ? sortedGrades.slice(0, MAX_COUNT) : sortedGrades;
+
+  const categories = filteredGradesList.map((grades) => `${grades}학점`);
+  const data = filteredGradesList.map((grades) => totalGradesCountMap[+grades]);
 
   return { categories, data };
 }
