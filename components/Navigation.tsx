@@ -18,7 +18,7 @@ export default function Navigation() {
     router.push('/signin');
   };
 
-  const isSelected = (pathname: string) => {
+  const getSelected = (pathname: string) => {
     return router.pathname === pathname;
   };
 
@@ -26,15 +26,15 @@ export default function Navigation() {
     <Wrapper>
       <Nav>
         <IconsWrapper>
-          <StyledLink isSelected={isSelected('/')} href='/'>
+          <StyledLink selected={getSelected('/')} href='/'>
             <MdHome size='30' />
           </StyledLink>
-          <StyledLink isSelected={isSelected('/statistics')} href='/statistics'>
+          <StyledLink selected={getSelected('/statistics')} href='/statistics'>
             <MdBarChart size='30' />
           </StyledLink>
         </IconsWrapper>
         <IconsWrapper>
-          <StyledLink isSelected={isSelected('/my')} href='/my'>
+          <StyledLink selected={getSelected('/my')} href='/my'>
             <MdOutlineManageAccounts size='30' />
           </StyledLink>
           <SignoutButton onClick={handleSignout}>
@@ -72,10 +72,10 @@ const IconsWrapper = styled.div`
   gap: 5px;
 `;
 
-const StyledLink = styled(Link)<{ isSelected: boolean }>`
+const StyledLink = styled(Link)<{ selected: boolean }>`
   padding: 5px;
-  background-color: ${({ isSelected }) =>
-    isSelected ? 'lightgray' : 'transparent'};
+  background-color: ${({ selected }) =>
+    selected ? 'lightgray' : 'transparent'};
   border-radius: 10px;
 `;
 
