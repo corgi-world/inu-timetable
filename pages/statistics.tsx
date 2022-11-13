@@ -130,7 +130,7 @@ const Main = styled.main`
   margin-top: 10px;
   @media (min-width: ${({ theme: { size } }) => size.desktop}) {
     padding: 0px;
-    margin-top: 20px;
+    margin-top: 30px;
   }
   width: 100%;
   display: flex;
