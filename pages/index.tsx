@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import type { TypeColleges, TypeMajorMap } from '@/types/timetable';
+import type {
+  IUserTimetable,
+  TypeColleges,
+  TypeMajorMap,
+} from '@/types/timetable';
 import { GRADES } from '@/consts/timetable';
 import ConditionSelector from '@/components/main/ConditionSelector';
 import { useFeedTimetables } from '@/queries/timetable/query';
 import CircularProgress from '@mui/material/CircularProgress';
 import ContentsManager from '@/components/home/ContentsManager';
+import IntersectObserver from '@/components/main/IntersectObserver';
 
 interface IStatistics {
   semesters: string[];
@@ -27,25 +32,44 @@ export default function Home({ semesters, majorMap }: IStatistics) {
     setGrade,
   } = useCondition(semesters, majorMap);
 
-  const { isLoading, data } = useFeedTimetables(
+  const { isFetching, data, hasNextPage, fetchNextPage } = useFeedTimetables(
     semester,
     college,
     major,
     grade,
   );
 
-  const renderMainContents = () => {
-    if (isLoading) {
-      return (
-        <SpinnerWrapper>
-          <CircularProgress size={60} />
-        </SpinnerWrapper>
-      );
-    } else if (data && data.userTimetables) {
-      return <ContentsManager userTimetables={data.userTimetables} />;
-    } else {
-      return <></>;
+  const handleInView = () => {
+    if (hasNextPage) {
+      fetchNextPage();
     }
+  };
+
+  const renderMainContents = () => {
+    if (data && data?.pages) {
+      const userTimetables = data?.pages.reduce<IUserTimetable[]>(
+        (prev, { userTimetables }) => {
+          if (userTimetables) prev.push(...userTimetables);
+          return prev;
+        },
+        [],
+      );
+      return <ContentsManager userTimetables={userTimetables} />;
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  const handleScroll = () => {
+    window.removeEventListener('scroll', handleScroll);
+
+    setIsScrolled(true);
   };
 
   return (
@@ -65,7 +89,17 @@ export default function Home({ semesters, majorMap }: IStatistics) {
         setGrade={setGrade}
         needSearchButton={false}
       />
-      <Main>{renderMainContents()}</Main>
+      <Main>
+        {renderMainContents()}
+        {isFetching && (
+          <SpinnerWrapper>
+            <CircularProgress size={60} />
+          </SpinnerWrapper>
+        )}
+        {!isFetching && hasNextPage && isScrolled && (
+          <IntersectObserver handleInView={handleInView} />
+        )}
+      </Main>
     </Wrapper>
   );
 }

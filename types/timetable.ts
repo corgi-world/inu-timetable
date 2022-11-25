@@ -36,6 +36,7 @@ export type TypeMajorMap = {
 };
 
 export interface IUserTimetable {
+  index: number;
   id: string;
   nickname: string;
   semester: string;
