@@ -3,9 +3,11 @@ import {
   useMutation,
   useQueryClient,
   QueryClient,
+  useInfiniteQuery,
 } from '@tanstack/react-query';
 import { get, post, _delete } from '../httpMethods';
 import {
+  feedGetService,
   majorMapService,
   statisticsGetService,
   userDeleteService,
@@ -116,10 +118,17 @@ export function useFeedTimetables(
 ) {
   const queryString = `?semester=${semester}&college=${college}&major=${major}&grade=${grade}`;
 
-  const queryResult = useQuery<IUserTimetablesResponse>(
-    ['statistics', semester, college, major, grade],
-    () => get(statisticsGetService, queryString),
-    { staleTime: 60 * 1000 * 60 },
+  const queryResult = useInfiniteQuery<IUserTimetablesResponse>(
+    ['feed', semester, college, major, grade],
+    ({ pageParam = 0 }) =>
+      get(feedGetService, `${queryString}&index=${pageParam}`),
+    {
+      getNextPageParam: ({ userTimetables }) =>
+        userTimetables
+          ? userTimetables[userTimetables.length - 1].index
+          : undefined,
+      refetchOnWindowFocus: false,
+    },
   );
 
   return queryResult;
