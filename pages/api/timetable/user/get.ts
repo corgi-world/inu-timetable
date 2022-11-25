@@ -31,6 +31,7 @@ export default async function handler(
 
     if (result) {
       const {
+        index,
         id,
         nickname,
         semester,
@@ -42,6 +43,7 @@ export default async function handler(
       } = result;
 
       const userTimetable = {
+        index,
         id,
         nickname,
         semester,
