@@ -40,7 +40,6 @@ export default function Home({ semesters, majorMap }: IStatistics) {
   );
 
   const handleInView = () => {
-    console.log('intersect');
     if (hasNextPage) {
       fetchNextPage();
     }
