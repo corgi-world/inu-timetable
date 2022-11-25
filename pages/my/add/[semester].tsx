@@ -150,6 +150,7 @@ export default function Add({ semester, timetables }: IAdd) {
 
     const totalGrades = calcTotalGrades(addedTimetables);
     const { data } = await postUserTimetable({
+      index: 0,
       id,
       nickname,
       semester,
