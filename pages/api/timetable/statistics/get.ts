@@ -70,6 +70,7 @@ function isAll(target: string | string[] | undefined) {
 function parseUserTimetablesObject(result: Timetables[]) {
   const userTimetables = result.map(
     ({
+      index,
       id,
       nickname,
       semester,
@@ -80,6 +81,7 @@ function parseUserTimetablesObject(result: Timetables[]) {
       timetables,
     }) => {
       return {
+        index,
         id,
         nickname,
         semester,
