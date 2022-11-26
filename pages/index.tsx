@@ -58,20 +58,6 @@ export default function Home({ semesters, majorMap }: IStatistics) {
     }
   };
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const [isScrolled, setIsScrolled] = useState(false);
-  const handleScroll = () => {
-    window.removeEventListener('scroll', handleScroll);
-
-    setIsScrolled(true);
-  };
-
   return (
     <Wrapper>
       <ConditionSelector
@@ -96,7 +82,7 @@ export default function Home({ semesters, majorMap }: IStatistics) {
             <CircularProgress size={60} />
           </SpinnerWrapper>
         )}
-        {!isFetching && hasNextPage && isScrolled && (
+        {!isFetching && hasNextPage && (
           <IntersectObserver handleInView={handleInView} />
         )}
       </Main>
