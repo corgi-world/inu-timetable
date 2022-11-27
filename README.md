@@ -22,10 +22,19 @@ https://user-images.githubusercontent.com/83255812/201507607-83908490-f870-48c2-
 
 - 다른 유저들이 등록한 시간표를 확인할 수 있다.
 - 단과대학, 전공, 학년에 따른 필터링이 가능하다.
-- 무한 스크롤을 적용할 예정이다.
+- 무한 스크롤을 구현하였다.
+  - https://velog.io/@corgi-world/Next.js-React-Query-Prisma와-함께하는-무한-스크롤
 - prisma query
 
   ```ts
+  const isCallNextPage = (index as string) !== '0';
+  const pageCondition = {
+    skip: 1,
+    cursor: {
+      index: +index,
+    },
+  };
+
   const result = await client.timetables.findMany({
     where: {
       AND: {
@@ -52,7 +61,8 @@ https://user-images.githubusercontent.com/83255812/201507607-83908490-f870-48c2-
     orderBy: {
       index: 'desc',
     },
-    take: 500,
+    take: TAKE_COUNT,
+    ...(isCallNextPage && pageCondition),
   });
   ```
 
@@ -67,10 +77,17 @@ https://user-images.githubusercontent.com/83255812/201507607-83908490-f870-48c2-
   ) {
     const queryString = `?semester=${semester}&college=${college}&major=${major}&grade=${grade}`;
 
-    const queryResult = useQuery<IUserTimetablesResponse>(
-      ['statistics', semester, college, major, grade],
-      () => get(statisticsGetService, queryString),
-      { staleTime: 60 * 1000 * 60 },
+    const queryResult = useInfiniteQuery<IUserTimetablesResponse>(
+      ['feed', semester, college, major, grade],
+      ({ pageParam = 0 }) =>
+        get(feedGetService, `${queryString}&index=${pageParam}`),
+      {
+        getNextPageParam: ({ userTimetables }) =>
+          userTimetables
+            ? userTimetables[userTimetables.length - 1].index
+            : undefined,
+        refetchOnWindowFocus: false,
+      },
     );
 
     return queryResult;
