@@ -25,4 +25,5 @@ model Timetables {
   grade       String
   totalGrades Int
   timetables  Json
+  likeUsers Json
 }
