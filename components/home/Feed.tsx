@@ -10,6 +10,7 @@ interface IFeed {
   grade: string;
   nickname: string;
   totalGrades: number;
+  likeUsers: string[];
 }
 
 export default function Feed({
@@ -18,8 +19,8 @@ export default function Feed({
   grade,
   nickname,
   totalGrades,
+  likeUsers,
 }: IFeed) {
-  const like = 30;
   const isLiked = false;
 
   return (
@@ -37,7 +38,7 @@ export default function Feed({
         >
           {isLiked ? <FcLike size='40' /> : <FcLikePlaceholder size='40' />}
         </IconWrapper>
-        {`좋아요 ${like}개`}
+        {`좋아요 ${likeUsers.length}개`}
       </LikeWrapper>
     </Wrapper>
   );

@@ -90,6 +90,7 @@ function parseUserTimetablesObject(result: Timetables[]) {
       grade,
       totalGrades,
       timetables,
+      likeUsers,
     }) => {
       return {
         index,
@@ -101,6 +102,7 @@ function parseUserTimetablesObject(result: Timetables[]) {
         grade,
         totalGrades,
         timetables: JSON.parse(timetables as string) as ITimetable[],
+        likeUsers: JSON.parse(likeUsers as string) as string[],
       };
     },
   );
