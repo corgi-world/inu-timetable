@@ -9,6 +9,7 @@ interface IContentsManager {
 
 export default function ContentsManager({ userTimetables }: IContentsManager) {
   const length = userTimetables.length;
+
   return (
     <Wrapper>
       {0 < length ? (
@@ -21,6 +22,7 @@ export default function ContentsManager({ userTimetables }: IContentsManager) {
             grade,
             nickname,
             totalGrades,
+            likeUsers,
           }) => (
             <Feed
               key={`${id}${semester}`}
@@ -29,6 +31,7 @@ export default function ContentsManager({ userTimetables }: IContentsManager) {
               grade={grade}
               nickname={nickname}
               totalGrades={totalGrades}
+              likeUsers={likeUsers}
             />
           ),
         )
