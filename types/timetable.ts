@@ -45,4 +45,5 @@ export interface IUserTimetable {
   grade: string;
   totalGrades: number;
   timetables: ITimetable[];
+  likeUsers: string[];
 }
