@@ -40,6 +40,7 @@ export default async function handler(
         grade,
         totalGrades,
         timetables,
+        likeUsers,
       } = result;
 
       const userTimetable = {
@@ -52,6 +53,7 @@ export default async function handler(
         grade,
         totalGrades,
         timetables: JSON.parse(timetables as string) as ITimetable[],
+        likeUsers: JSON.parse(likeUsers as string) as string[],
       };
 
       res
