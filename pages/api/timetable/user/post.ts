@@ -25,6 +25,7 @@ export default async function handler(
     grade,
     totalGrades,
     timetables,
+    likeUsers,
   } = req.body;
 
   try {
@@ -38,6 +39,7 @@ export default async function handler(
         grade,
         totalGrades,
         timetables: JSON.stringify(timetables),
+        likeUsers: JSON.stringify(likeUsers),
       },
     });
     res.status(200).json({ ok: true, message: '저장 완료' });
