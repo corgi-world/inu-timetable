@@ -11,11 +11,17 @@ import { useFeedTimetables } from '@/queries/timetable/query';
 import CircularProgress from '@mui/material/CircularProgress';
 import ContentsManager from '@/components/home/ContentsManager';
 import IntersectObserver from '@/components/main/IntersectObserver';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 interface IStatistics {
   semesters: string[];
   majorMap: TypeMajorMap;
 }
+
+const ORDER_TIME = '최신순';
+const ORDER_LIKE = '좋아요순';
+type TypeOrder = typeof ORDER_TIME | typeof ORDER_LIKE;
 
 export default function Home({ semesters, majorMap }: IStatistics) {
   const {
@@ -32,6 +38,16 @@ export default function Home({ semesters, majorMap }: IStatistics) {
     setGrade,
   } = useCondition(semesters, majorMap);
 
+  const [order, setOrder] = useState<TypeOrder>(ORDER_TIME);
+  const handleOrderChange = (
+    _: React.MouseEvent<HTMLElement>,
+    value: string,
+  ) => {
+    if ((value && value === ORDER_TIME) || value === ORDER_LIKE) {
+      setOrder(value);
+    }
+  };
+
   const { isFetching, data, hasNextPage, fetchNextPage } = useFeedTimetables(
     semester,
     college,
@@ -45,6 +61,10 @@ export default function Home({ semesters, majorMap }: IStatistics) {
     }
   };
 
+  const handleLikeClick = (index: number) => {
+    console.log(index);
+  };
+
   const renderMainContents = () => {
     if (data && data?.pages) {
       const userTimetables = data?.pages.reduce<IUserTimetable[]>(
@@ -54,27 +74,44 @@ export default function Home({ semesters, majorMap }: IStatistics) {
         },
         [],
       );
-      return <ContentsManager userTimetables={userTimetables} />;
+      return (
+        <ContentsManager
+          userTimetables={userTimetables}
+          handleLikeClick={handleLikeClick}
+        />
+      );
     }
   };
 
   return (
     <Wrapper>
-      <ConditionSelector
-        semesters={semesters}
-        semester={semester}
-        setSemester={setSemester}
-        colleges={colleges}
-        college={college}
-        setCollege={setCollege}
-        majors={majors}
-        major={major}
-        setMajor={setMajor}
-        grades={grades}
-        grade={grade}
-        setGrade={setGrade}
-        needSearchButton={false}
-      />
+      <ConditionWrapper>
+        <ConditionSelector
+          semesters={semesters}
+          semester={semester}
+          setSemester={setSemester}
+          colleges={colleges}
+          college={college}
+          setCollege={setCollege}
+          majors={majors}
+          major={major}
+          setMajor={setMajor}
+          grades={grades}
+          grade={grade}
+          setGrade={setGrade}
+          needSearchButton={false}
+        />
+        <StyledToggleButtonGroup
+          color='primary'
+          value={order}
+          sx={{ height: '39px' }}
+          exclusive
+          onChange={handleOrderChange}
+        >
+          <ToggleButton value={ORDER_TIME}>{ORDER_TIME}</ToggleButton>
+          <ToggleButton value={ORDER_LIKE}>{ORDER_LIKE}</ToggleButton>
+        </StyledToggleButtonGroup>
+      </ConditionWrapper>
       <Main>
         {renderMainContents()}
         {isFetching && (
@@ -130,6 +167,28 @@ const Wrapper = styled.div`
     width: 950px;
   }
   margin: 0 auto;
+`;
+
+const ConditionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+`;
+
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)`
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
+  width: 100%;
+  @media (min-width: ${({ theme: { size } }) => size.desktop}) {
+    padding-right: 0px;
+  }
+
+  display: none;
 `;
 
 const Main = styled.main`

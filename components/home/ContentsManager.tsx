@@ -5,15 +5,21 @@ import Feed from './Feed';
 
 interface IContentsManager {
   userTimetables: IUserTimetable[];
+  handleLikeClick: (index: number) => void;
 }
 
-export default function ContentsManager({ userTimetables }: IContentsManager) {
+export default function ContentsManager({
+  userTimetables,
+  handleLikeClick,
+}: IContentsManager) {
   const length = userTimetables.length;
+
   return (
     <Wrapper>
       {0 < length ? (
         userTimetables.map(
           ({
+            index,
             id,
             semester,
             timetables,
@@ -21,14 +27,18 @@ export default function ContentsManager({ userTimetables }: IContentsManager) {
             grade,
             nickname,
             totalGrades,
+            likeUsers,
           }) => (
             <Feed
               key={`${id}${semester}`}
+              index={index}
               timetables={timetables}
               major={major}
               grade={grade}
               nickname={nickname}
               totalGrades={totalGrades}
+              likeUsers={likeUsers}
+              handleLikeClick={handleLikeClick}
             />
           ),
         )

@@ -159,6 +159,7 @@ export default function Add({ semester, timetables }: IAdd) {
       grade,
       totalGrades,
       timetables: addedTimetables,
+      likeUsers: [],
     });
 
     setSaveLoading(false);
