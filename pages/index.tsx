@@ -177,6 +177,8 @@ const ConditionWrapper = styled.div`
     align-items: flex-end;
     justify-content: space-between;
   }
+
+  display: none;
 `;
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)`
