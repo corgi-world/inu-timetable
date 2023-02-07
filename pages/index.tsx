@@ -177,8 +177,6 @@ const ConditionWrapper = styled.div`
     align-items: flex-end;
     justify-content: space-between;
   }
-
-  display: none;
 `;
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)`
@@ -189,6 +187,8 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)`
   @media (min-width: ${({ theme: { size } }) => size.desktop}) {
     padding-right: 0px;
   }
+
+  display: none;
 `;
 
 const Main = styled.main`
