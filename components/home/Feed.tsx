@@ -5,21 +5,25 @@ import Viewer from '@/components/timetable/viewer';
 import { FcLikePlaceholder, FcLike } from 'react-icons/fc';
 
 interface IFeed {
+  index: number;
   timetables: ITimetable[];
   major: string;
   grade: string;
   nickname: string;
   totalGrades: number;
   likeUsers: string[];
+  handleLikeClick: (index: number) => void;
 }
 
 export default function Feed({
+  index,
   timetables,
   major,
   grade,
   nickname,
   totalGrades,
   likeUsers,
+  handleLikeClick,
 }: IFeed) {
   const isLiked = false;
 
@@ -33,7 +37,7 @@ export default function Feed({
       <LikeWrapper>
         <IconWrapper
           onClick={() => {
-            console.log('dd');
+            handleLikeClick(index);
           }}
         >
           {isLiked ? <FcLike size='40' /> : <FcLikePlaceholder size='40' />}

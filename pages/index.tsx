@@ -61,6 +61,10 @@ export default function Home({ semesters, majorMap }: IStatistics) {
     }
   };
 
+  const handleLikeClick = (index: number) => {
+    console.log(index);
+  };
+
   const renderMainContents = () => {
     if (data && data?.pages) {
       const userTimetables = data?.pages.reduce<IUserTimetable[]>(
@@ -70,7 +74,12 @@ export default function Home({ semesters, majorMap }: IStatistics) {
         },
         [],
       );
-      return <ContentsManager userTimetables={userTimetables} />;
+      return (
+        <ContentsManager
+          userTimetables={userTimetables}
+          handleLikeClick={handleLikeClick}
+        />
+      );
     }
   };
 
